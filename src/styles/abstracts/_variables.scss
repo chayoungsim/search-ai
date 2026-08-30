@@ -1,0 +1,87 @@
+ /* primitive */
+$color-primary: #208B5C;
+$color-primary-dark: #12633F;
+$color-primary-light: #E5F4EC;
+
+// 1. Colors
+// ==========================================================================
+$color-white: #fff;
+$color-black: #171A18;
+$color-error: #D9534F; // = 참고 사이트 --color-fail
+$color-warn: #D9A441;  // = 참고 사이트 --color-warn
+
+// Grayscale - useful for text, backgrounds, borders
+$color-gray-100: #f8f8f8;
+$color-gray-200: #eeeeee; // Used in blockquote border
+$color-gray-300: #dddddd;
+$color-gray-400: #bbbbbb;
+$color-gray-500: #999999;
+$color-gray-600: #777777; // Used in blockquote text
+$color-gray-700: #555555;
+$color-gray-800: #333333; // Close to body text color
+$color-gray-900: #111111;
+
+// Theme Colors
+$color-background: #F5F7F4; // = 참고 사이트 --color-bg
+$color-text: #252A27;
+$color-text-mute: #6C746E;  // = 참고 사이트 --color-muted
+$color-link: $color-primary;
+$color-border: #DFE4DF;     // = 참고 사이트 --color-line
+$color-border-light: $color-gray-100;
+
+
+// 2. Fonts
+// ==========================================================================
+$font-family-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-black: 800; // 섹션 라벨/뱃지 등 강조 텍스트
+
+$letter-spacing-tight: -0.02em; // 참고 사이트 본문 자간
+
+// 3. Typography Scale (based on 1rem = 10px)
+// ==========================================================================
+$font-size-base: 1.7rem; // 17px
+
+$font-size-h1: 5.6rem;
+$font-size-h2: 3.6rem;
+$font-size-h3: 2.8rem;
+$font-size-h4: 2.2rem;
+
+// Display Typography - Hero/Section 대형 타이틀 (참고 사이트 clamp 값)
+$font-size-label: 1.2rem;                       // 12px, 섹션 라벨/뱃지
+$font-size-hero-title: clamp(6rem, 9vw, 12.8rem);      // 60px ~ 128px
+$font-size-section-title: clamp(4.2rem, 5vw, 6.8rem);  // 42px ~ 68px
+$font-size-intro-title: clamp(3rem, 4vw, 4.8rem);      // 30px ~ 48px
+$font-size-detail-title: clamp(3.4rem, 4vw, 5.2rem);   // 34px ~ 52px
+$font-size-cta-title: clamp(4.4rem, 6vw, 8rem);        // 44px ~ 80px
+
+// 4. Spacing
+// ==========================================================================
+$spacing-base: 1rem; // 10px
+$spacing-paragraph: 1.6rem; // 16px
+
+// 레이아웃 상수 (참고 사이트 container / section 간격)
+$container-max-width: 120rem; // 1200px
+$container-padding: 2.4rem;   // 24px, container: width: min(1200px, 100% - 48px)
+$spacing-section-y: 10rem;        // 100px, 섹션 상하 padding
+$spacing-section-y-mobile: 5rem;  // 50px, 섹션 상하 padding (모바일)
+$spacing-section-header: 6.4rem;  // 64px, 섹션 헤더 하단 여백
+
+// 5. Borders
+$border-width-base: 0.4rem;
+
+// 6. Radius
+// ==========================================================================
+$radius-none: 0;
+$radius-sm: 1.4rem;  // 14px
+$radius-md: 2rem;    // 20px
+$radius-lg: 2.8rem;  // 28px
+$radius-pill: 999px; // 배지, 버튼 등 알약형
+$radius-circle: 50%;
+
+// 7. Paths
+// ==========================================================================
+// public/ 폴더 기준 절대경로. mask url()이 동적 파일명을 조합하므로
+// Vite가 빌드타임에 정적분석할 수 없어 public에 두고 절대경로로 참조한다.
+$url-imgs: '/assets/';

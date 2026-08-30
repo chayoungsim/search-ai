@@ -1,0 +1,181 @@
+@use '@/styles/abstracts' as *;
+
+// ─────────────────────────────────────────────
+// 진단 체크리스트형 페이지 공용 스타일 (/seo, /aeo, /geo)
+// 참고 사이트(https://geo-app-one-gray.vercel.app/)의 Guide 페이지 클래스를
+// 우리 프로젝트 rem 토큰 / CSS 커스텀 프로퍼티에 맞게 이식
+// ─────────────────────────────────────────────
+
+// 섹션 1. 무엇인가 / 왜 필요한가
+// ─────────────────────────────────────────────
+.checklist-why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: var(--section-header-gap);
+}
+
+.checklist-why-card {
+  padding: 4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+
+  h3 {
+    margin: 0 0 1.6rem;
+    font-size: 2.2rem;
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 1.5rem;
+    line-height: 1.8;
+  }
+}
+
+.checklist-score-note {
+  margin: 2.4rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+
+// 섹션 2. 진단 항목 요약 (comparison-card 재사용, 배경만 지정)
+// ─────────────────────────────────────────────
+.checklist-diagnostics {
+  background: var(--color-bg);
+}
+
+// 섹션 3. 어떻게 체크하는가 — 참고 사이트 Guide 페이지 이식
+// ─────────────────────────────────────────────
+.guide-category {
+  margin-bottom: 9.6rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.guide-category-header {
+  max-width: 64rem;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+
+.guide-category-tag {
+  display: inline-block;
+  margin-bottom: 1.4rem;
+  padding: 0.6rem 1.6rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.guide-category-title {
+  margin: 0;
+  font-size: clamp(2.4rem, 3vw, 3rem);
+  letter-spacing: -0.05em;
+}
+
+.guide-category-header p {
+  margin: 1.4rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+
+.guide-card-list {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2.4rem;
+}
+
+.guide-card {
+  padding: 3.2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+}
+
+.guide-card-heading {
+  display: block;
+  margin: 0 0 0.6rem;
+  color: var(--color-primary-dark);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guide-card-title {
+  margin: 0 0 2rem;
+  font-size: 1.8rem;
+  letter-spacing: -0.03em;
+}
+
+.guide-card > p {
+  margin: 0 0 2rem;
+  color: var(--color-text);
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+.guide-how-list {
+  margin: 0;
+  padding-left: 0;
+  color: var(--color-text);
+  font-size: 1.4rem;
+  line-height: 1.8;
+
+  li {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  li + li {
+    margin-top: 0.4rem;
+  }
+}
+
+// 체크리스트 페이지(seo/aeo/geo-checklist.html) 새 창 링크 CTA
+.guide-cta {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding-top: 5.6rem;
+  text-align: center;
+
+  p {
+    margin: 0 0 2.4rem;
+    color: var(--color-muted);
+    font-size: 1.5rem;
+  }
+}
+
+// ─────────────────────────────────────────────
+// 반응형 (기존 overview 계열과 동일한 900px / 600px 브레이크포인트)
+// ─────────────────────────────────────────────
+@media (width <= 900px) {
+  .checklist-why-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 600px) {
+  .guide-card {
+    padding: 2.6rem 2.2rem;
+  }
+}

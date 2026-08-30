@@ -1,0 +1,17 @@
+@use '@/styles/abstracts' as *;
+
+// 참고 사이트: https://geo-app-one-gray.vercel.app/ 라운드/그림자 값을 그대로 반영
+:root {
+
+  --radius-none: #{$radius-none};
+  --radius-sm: #{$radius-sm};   // 14px
+  --radius-md: #{$radius-md};   // 20px
+  --radius-lg: #{$radius-lg};   // 28px
+  --radius-pill: #{$radius-pill}; // 999px, 배지/버튼 알약형
+  --radius-circle: #{$radius-circle};
+
+  // comparison-card 등 hover 시 사용하는 그림자 (#16231c17 = rgba(22, 35, 28, 0.09))
+  --shadow-card: 0 1px 2px rgba(22, 35, 28, 0.04);
+  --shadow-hover: 0 30px 60px rgba(22, 35, 28, 0.09);
+  --near-black: #{$color-black};
+}

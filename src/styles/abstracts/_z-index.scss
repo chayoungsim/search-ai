@@ -1,0 +1,14 @@
+$z-index: (
+  hide:        -1,
+  base:         0,
+  content:      1,
+  dropdown:     100,
+  sticky:       200,   // 스크롤 따라다니는 헤더 등
+  fixed-header: 300,
+  overlay:      400,   // 딤 배경
+  drawer:       500,   // 사이드 메뉴
+  modal:        600,
+  popover:      700,
+  toast:        800,
+  tooltip:      900,
+);

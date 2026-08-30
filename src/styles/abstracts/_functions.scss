@@ -1,0 +1,6 @@
+@use 'sass:map';
+@use './z-index' as *;
+
+@function z($key) {
+    @return map.get($z-index, $key);
+}

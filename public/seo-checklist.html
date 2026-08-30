@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO 체크리스트 | 19개 항목 점검</title>
+<meta name="description" content="SEO 진단 체크리스트 — Technical SEO · On-page/Content · Structured Data 3개 카테고리, 19개 항목(S01~S19) 기준 점검">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — SearchAI 디자인 가이드(그린 프라이머리) 체계
+   ============================================================ */
+:root{
+  --c-paper:#F5F7F4; --c-surface:#FFFFFF;
+  --c-ink:#171A18; --c-ink-2:#5A6069; --c-ink-3:#8B909A;
+  --c-rule:#DFE4DF; --c-rule-strong:#C9C9C1;
+  --c-green:#208B5C; --c-green-dark:#12633F; --c-green-wash:#E5F4EC;
+  --c-red:#D9534F;   --c-red-wash:#FCEDF1;
+  --c-amber:#8A5A00; --c-amber-wash:#FBF3E2;
+
+  --color-bg:var(--c-paper);
+  --color-surface:var(--c-surface);
+  --color-text-strong:var(--c-ink);
+  --color-text:var(--c-ink-2);
+  --color-text-mute:var(--c-ink-3);
+  --color-border:var(--c-rule);
+  --color-border-strong:var(--c-rule-strong);
+  --color-primary:var(--c-green);
+  --color-primary-wash:var(--c-green-wash);
+
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem;  --space-8:3rem;   --space-10:4rem;
+
+  --radius-sm:3px; --radius-md:6px; --radius-lg:10px; --radius-full:999px;
+  --shadow-sm:0 1px 2px rgba(20,22,26,.06);
+
+  --z-sticky:100; --z-header:300;
+
+  --font-body:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --focus-ring:2px solid var(--color-primary);
+  --focus-offset:2px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:1rem;line-height:1.7;letter-spacing:-.01em;
+}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--color-primary)}
+code,kbd{font-family:var(--font-mono);font-size:.85em}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset);border-radius:2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+}
+.skip-nav{
+  position:absolute;left:var(--space-4);top:-200%;z-index:999;
+  padding:var(--space-3) var(--space-5);
+  background:var(--color-text-strong);color:#fff;font-weight:600;
+  text-decoration:none;border-radius:0 0 var(--radius-md) var(--radius-md);
+}
+.skip-nav:focus{top:0}
+
+.wrap{max-width:62rem;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead{padding:var(--space-10) 0 var(--space-6)}
+.masthead__eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-4);
+}
+.masthead__title{
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.15;letter-spacing:-.035em;
+  font-weight:800;color:var(--color-text-strong);
+}
+.masthead__lead{margin-top:var(--space-4);max-width:44rem}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));
+  gap:1px;background:var(--color-border);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);overflow:hidden;margin-top:var(--space-6);
+}
+.stats__cell{background:var(--color-surface);padding:var(--space-4)}
+.stats__num{
+  display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:700;
+  color:var(--color-text-strong);line-height:1.2;
+}
+.stats__label{display:block;font-size:.78rem;color:var(--color-text-mute);margin-top:var(--space-1)}
+
+/* ============================================================
+   진행률 바 — 시그니처
+   ============================================================ */
+.tracker{
+  position:sticky;top:0;z-index:var(--z-header);
+  background:rgba(245,247,244,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.tracker__inner{
+  max-width:62rem;margin:0 auto;padding:var(--space-3) var(--space-5);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);
+}
+.tracker__meter{flex:1 1 12rem;min-width:10rem}
+.tracker__bar{
+  height:.55rem;background:var(--color-border);border-radius:var(--radius-full);
+  overflow:hidden;
+}
+.tracker__fill{
+  display:block;height:100%;width:0%;background:var(--color-primary);
+  border-radius:var(--radius-full);transition:width .25s ease;
+}
+.tracker__count{
+  font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-mute);
+  margin-top:var(--space-1);display:block;
+}
+.tracker__count b{color:var(--color-text-strong);font-weight:700}
+
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1)}
+.filters__btn{
+  appearance:none;border:1px solid var(--color-border-strong);
+  background:var(--color-surface);color:var(--color-text);
+  padding:.35rem .8rem;border-radius:var(--radius-full);
+  font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.filters__btn:hover{border-color:var(--color-text-mute)}
+.filters__btn[aria-pressed="true"]{
+  background:var(--color-text-strong);border-color:var(--color-text-strong);color:#fff;
+}
+.filters__reset{
+  appearance:none;border:0;background:transparent;color:var(--color-text-mute);
+  font-family:inherit;font-size:.78rem;cursor:pointer;text-decoration:underline;
+  padding:.35rem .5rem;border-radius:var(--radius-sm);
+}
+.filters__reset:hover{color:var(--c-red)}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
+.section__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-3);
+  margin-bottom:var(--space-2);
+}
+.section__num{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.1em;color:var(--color-primary);
+}
+.section__title{
+  font-size:1.4rem;letter-spacing:-.025em;font-weight:700;color:var(--color-text-strong);
+}
+.section__progress{
+  margin-left:auto;font-family:var(--font-mono);font-size:.72rem;
+  color:var(--color-text-mute);white-space:nowrap;
+}
+.section__desc{margin-bottom:var(--space-5);max-width:46rem;font-size:.93rem}
+
+/* ============================================================
+   CHECK ITEM
+   ============================================================ */
+.checks{
+  border:1px solid var(--color-border);border-radius:var(--radius-lg);
+  background:var(--color-surface);overflow:hidden;
+}
+.check{border-bottom:1px solid var(--color-border)}
+.check:last-child{border-bottom:0}
+.check.is-hidden{display:none}
+
+.check__main{
+  display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-4);cursor:pointer;
+}
+.check__main:hover{background:var(--c-paper)}
+.check__box{
+  flex:none;width:1.2rem;height:1.2rem;margin:.3rem 0 0;
+  accent-color:var(--color-primary);cursor:pointer;
+}
+.check__body{flex:1;min-width:0}
+.check__title{
+  font-size:.95rem;font-weight:600;color:var(--color-text-strong);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);
+}
+.check__desc{margin-top:var(--space-1);font-size:.87rem;color:var(--color-text)}
+.check__desc code{
+  background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);
+  color:var(--color-text-strong);
+}
+
+.check input:checked ~ .check__body .check__title{
+  color:var(--color-text-mute);text-decoration:line-through;text-decoration-thickness:1px;
+}
+.check input:checked ~ .check__body .check__desc{color:var(--color-text-mute)}
+
+.tag{
+  display:inline-block;padding:.1em .55em;border-radius:var(--radius-full);
+  font-family:var(--font-mono);font-size:.66rem;font-weight:500;
+  border:1px solid currentColor;white-space:nowrap;
+}
+.tag--weight{color:var(--color-primary);background:var(--color-primary-wash)}
+
+/* 체크 방법 접기 */
+.check details{margin:var(--space-3) 0 0}
+.check summary{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-mono);font-size:.72rem;color:var(--color-primary);
+  cursor:pointer;padding:.2rem .1rem;border-radius:var(--radius-sm);list-style:none;
+}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:"▸";transition:transform .15s ease;display:inline-block}
+.check details[open] summary::before{transform:rotate(90deg)}
+.check__how{
+  margin:var(--space-2) 0 0;padding:var(--space-3) var(--space-4);
+  background:var(--c-paper);border:1px solid var(--color-border);border-radius:var(--radius-md);
+  font-size:.83rem;line-height:1.85;
+}
+.check__how li{position:relative;padding-left:1.1em}
+.check__how li::before{content:"–";position:absolute;left:0;color:var(--color-text-mute)}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note{
+  border-left:3px solid var(--color-primary);background:var(--color-primary-wash);
+  padding:var(--space-4) var(--space-5);border-radius:0 var(--radius-md) var(--radius-md) 0;
+  margin:var(--space-5) 0;font-size:.89rem;color:var(--color-text-strong);
+}
+.note code{background:rgba(255,255,255,.7);padding:.1em .4em;border-radius:var(--radius-sm)}
+
+.foot{padding:var(--space-8) 0 var(--space-10);font-size:.82rem;color:var(--color-text-mute);border-top:1px solid var(--color-border)}
+.foot dl{display:flex;flex-wrap:wrap;gap:var(--space-5);font-family:var(--font-mono);font-size:.73rem}
+.foot dt{color:var(--color-text-mute)}
+.foot dd{margin:0;color:var(--color-text-strong)}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  .tracker,.skip-nav,.filters,.check summary{display:none !important}
+  .check details{display:block !important}
+  body{background:#fff;font-size:10pt}
+  .section{break-inside:avoid;padding:1rem 0}
+  .checks,.check{break-inside:avoid}
+  .note{background:#fff;border:1px solid #999}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">본문 바로가기</a>
+
+<!-- // 진행률 트래커 -->
+<div class="tracker">
+  <div class="tracker__inner">
+    <div class="tracker__meter">
+      <div class="tracker__bar"><span class="tracker__fill" id="progress-fill"></span></div>
+      <span class="tracker__count" id="progress-count" role="status">
+        <b>0</b> / 0 완료
+      </span>
+      <span class="sr-only" id="progress-label">전체 점검 진행률</span>
+    </div>
+
+    <div class="filters" role="group" aria-label="항목 필터">
+      <button type="button" class="filters__btn" data-filter="all" aria-pressed="true">전체</button>
+      <button type="button" class="filters__btn" data-filter="todo" aria-pressed="false">미완료만</button>
+    </div>
+    <button type="button" class="filters__reset" id="reset-btn">전체 해제</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">SEO 진단 · Technical / On-page / Structured Data</p>
+      <h1 class="masthead__title">검색엔진에 보이지 않으면<br>존재하지 않는 것과 같습니다</h1>
+      <p class="masthead__lead">
+        Lighthouse SEO 100점도 완전한 통과는 아닙니다. <code>robots.txt</code> 설정 하나만 잘못돼도
+        중요한 페이지가 색인에서 통째로 빠질 수 있습니다. 이 체크리스트는 Technical SEO부터
+        Structured Data까지 19개 항목을 실제로 하나씩 확인하는 순서로 정리한 것입니다.
+      </p>
+
+      <div class="stats">
+        <div class="stats__cell"><span class="stats__num">3</span><span class="stats__label">카테고리</span></div>
+        <div class="stats__cell"><span class="stats__num">19</span><span class="stats__label">진단 항목</span></div>
+        <div class="stats__cell"><span class="stats__num">39</span><span class="stats__label">합계 점수</span></div>
+        <div class="stats__cell"><span class="stats__num">40<span style="font-size:1rem">%</span></span><span class="stats__label">Overall 비중</span></div>
+      </div>
+
+      <div class="note">
+        <b>SEO는 Overall Score(100점)의 40%를 차지합니다.</b>
+        Technical SEO 20점 · On-page/Content 14점 · Structured Data 5점, 총 19개 항목(S01~S19)으로 진단합니다.
+        (Weight 합산 기준 총 39점으로, 원본 체크리스트 문서의 표기치 40점과는 1점 차이가 있습니다.)
+        각 항목 옆 <span class="tag tag--weight">Weight N</span> 배지는 해당 항목이 Overall Score에서 차지하는 점수입니다.
+      </div>
+    </header>
+
+    <!-- ============ 01 Technical SEO ============ -->
+    <section class="section" id="s1" aria-labelledby="s1-title">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" id="s1-title">Technical SEO</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">검색엔진이 사이트에 정상적으로 접근하고, 크롤링하고, 색인할 수 있는지를 확인하는 기술적 기반입니다. HTTPS, 크롤링 허용 여부, 사이트맵, 리다이렉트, 모바일 대응, 페이지 속도, 내부 링크 구조까지 검색엔진과 사용자가 사이트를 문제없이 이용할 수 있는 환경을 만드는 항목들로 구성됩니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S01 HTTPS <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">HTTPS와 리다이렉트, Mixed Content 여부는 사용자 데이터를 보호하고 브라우저 경고 없이 신뢰할 수 있는 사이트라는 것을 검색엔진과 사용자 모두에게 보여주는 가장 기본적인 보안 기준입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>HTTPS 적용</li>
+                  <li>HTTP → HTTPS redirect</li>
+                  <li>Mixed Content 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S02 Crawlability <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">robots.txt와 크롤러 접근 설정이 올바르지 않으면 검색엔진이 중요한 페이지를 아예 발견하지 못해, 이후의 모든 SEO 노력이 무의미해질 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>robots.txt 존재</li>
+                  <li>중요한 페이지 차단 없음</li>
+                  <li>Googlebot / Bingbot 접근 가능</li>
+                  <li>불필요한 페이지 크롤링 제어</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S03 Indexability <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">noindex, canonical, X-Robots-Tag 설정을 점검해 검색엔진이 의도한 페이지만 정확히 색인하도록 만드는 항목입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>noindex 여부 확인</li>
+                  <li>X-Robots-Tag 확인</li>
+                  <li>canonical 확인</li>
+                  <li>indexable 상태</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S04 Sitemap <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">정상적인 sitemap.xml은 검색엔진이 사이트의 전체 페이지 구조와 최신 상태를 빠르게 파악하도록 돕는 지도 역할을 합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>sitemap.xml 존재</li>
+                  <li>정상 XML</li>
+                  <li>canonical URL 포함</li>
+                  <li>broken URL 없음</li>
+                  <li>lastmod 정보 적절</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S05 URL / Redirect <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">리다이렉트 체인이나 404, soft 404가 방치되면 크롤링 예산이 낭비되고 사용자 경험도 나빠지므로, URL 상태와 canonical 일치 여부를 꾸준히 점검해야 합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>HTTP 200</li>
+                  <li>redirect chain 없음</li>
+                  <li>404 없음</li>
+                  <li>soft 404 없음</li>
+                  <li>canonical과 실제 URL 일치</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S06 Mobile <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">대부분의 검색 트래픽이 모바일에서 발생하는 만큼, viewport 설정과 반응형 레이아웃, 콘텐츠 동등성은 모바일 우선 색인 시대의 필수 조건입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>viewport 설정</li>
+                  <li>responsive layout</li>
+                  <li>mobile content parity</li>
+                  <li>horizontal overflow 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S07 Performance <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">LCP, INP, CLS 같은 Core Web Vitals와 이미지·리소스 최적화는 검색 순위 요소이자 실제 사용자가 페이지를 얼마나 쾌적하게 경험하는지를 좌우합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>LCP</li>
+                  <li>INP</li>
+                  <li>CLS</li>
+                  <li>이미지 최적화</li>
+                  <li>JS / CSS 과도한 blocking 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S08 Internal Architecture <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">내부 링크 구조와 페이지 depth, anchor text는 검색엔진이 사이트 내에서 어떤 페이지가 중요한지 이해하고 link equity를 배분하는 기준이 됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>내부 링크 존재</li>
+                  <li>orphan page 없음</li>
+                  <li>주요 페이지 depth 과도하지 않음</li>
+                  <li>anchor text 명확</li>
+                  <li>중요 페이지로 link equity 전달</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 02 On-page / Content ============ -->
+    <section class="section" id="s2" aria-labelledby="s2-title">
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title" id="s2-title">On-page / Content</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">실제로 노출되는 페이지 콘텐츠와 마크업이 검색 의도에 부합하는지 평가하는 영역입니다. 제목, 메타 설명, 헤딩 구조, 시맨틱 마크업은 물론 콘텐츠가 키워드 및 사용자 의도와 얼마나 일치하는지, 실질적인 가치를 담고 있는지를 함께 점검합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S09 Title <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">title 태그는 검색 결과에서 가장 먼저 노출되는 요소로, 페이지별로 고유하고 핵심 주제를 담아야 클릭과 색인 모두에서 유리합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>title 존재</li>
+                  <li>페이지별 고유 title</li>
+                  <li>핵심 주제 반영</li>
+                  <li>과도한 keyword stuffing 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S10 Meta Description <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">메타 설명은 순위에 직접 반영되지는 않지만, 검색 결과에서 클릭 여부를 좌우하는 요약문이므로 페이지 내용과 사용자 의도를 정확히 반영해야 합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>존재</li>
+                  <li>페이지별 고유</li>
+                  <li>페이지 내용과 일치</li>
+                  <li>사용자 의도를 반영</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S11 Heading <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">H1부터 이어지는 헤딩 계층 구조는 검색엔진과 사용자 모두에게 콘텐츠의 논리적 흐름을 알려주는 지도 역할을 합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>H1 존재</li>
+                  <li>H1 중복 없음</li>
+                  <li>H2/H3 계층 구조 준수</li>
+                  <li>heading이 실제 콘텐츠 구조를 설명</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S12 Semantic HTML <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">header, nav, main, section 같은 시맨틱 태그를 적절히 사용하면 검색엔진과 스크린 리더가 페이지 구조를 더 정확하게 해석할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>header / nav / main / section / article / footer</li>
+                  <li>button / link 적절한 사용</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S13 Content Relevance <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">콘텐츠가 타겟 키워드와 실제 검색 의도에 얼마나 부합하는지는 검색엔진이 페이지를 특정 쿼리에 매칭시킬지를 결정하는 핵심 기준입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>입력 keyword와 콘텐츠 주제 일치</li>
+                  <li>검색 의도와 콘텐츠 일치</li>
+                  <li>핵심 질문에 대한 내용 존재</li>
+                  <li>불필요한 keyword 반복 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S14 Content Quality <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">독창적이고 구체적이며 최신 정보를 담은 콘텐츠만이 사용자와 검색엔진 모두에게 실질적인 가치가 있다고 평가받습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>독창적인 정보</li>
+                  <li>구체적인 설명</li>
+                  <li>실제 경험 / 사례</li>
+                  <li>최신 정보</li>
+                  <li>사용자에게 실질적인 가치</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S15 Image / Media <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">이미지 alt 텍스트와 파일 최적화는 접근성을 높이는 동시에, 이미지 검색과 페이지 로딩 속도에도 직접적인 영향을 줍니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>의미 있는 이미지 alt</li>
+                  <li>장식 이미지 처리</li>
+                  <li>이미지 파일 최적화</li>
+                  <li>영상 / 미디어 설명 제공</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 03 Structured Data ============ -->
+    <section class="section" id="s3" aria-labelledby="s3-title">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" id="s3-title">Structured Data</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">JSON-LD 등 구조화 데이터가 존재하고, 문법적으로 올바르며, 페이지의 실제 콘텐츠와 일치하는지를 확인하는 영역입니다. 검색엔진이 페이지의 엔티티와 맥락을 더 정확히 이해하도록 돕는 보조 신호를 점검합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S16 Schema Presence <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">페이지 유형에 맞는 JSON-LD 구조화 데이터가 존재하는지 확인해, 검색엔진이 콘텐츠를 더 풍부한 형태(리치 리절트)로 이해할 수 있는 기반을 마련합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>JSON-LD 존재</li>
+                  <li>페이지 유형에 적절한 Schema 사용</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S17 Schema Validity <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">JSON-LD 문법과 @context, @type, property가 정확해야 검색엔진이 구조화 데이터를 오류 없이 파싱하고 신뢰할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>JSON-LD syntax 정상</li>
+                  <li>@context 정상</li>
+                  <li>@type 정상</li>
+                  <li>property 오류 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S18 Entity Completeness <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">Organization, Person, Product 등 핵심 엔티티에 name, url, identifier, sameAs 같은 정보가 충분히 채워져 있어야 검색엔진이 실체를 명확히 식별할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Organization / Person / Product 등 entity 정의</li>
+                  <li>name / url / identifier / sameAs</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">S19 Schema Consistency <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">구조화 데이터는 화면에 보이는 실제 콘텐츠와 반드시 일치해야 하며, 중복되거나 상충하는 엔티티가 없어야 검색엔진의 신뢰를 유지할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>페이지 내용과 Schema 일치</li>
+                  <li>visible content와 구조화 데이터 일치</li>
+                  <li>중복 entity 없음</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      <dl>
+        <dt>버전</dt><dd>1.0</dd>
+        <dt>기준</dt><dd>SEO 체크리스트 (docs/SEO 체크리스트.md)</dd>
+        <dt>합계</dt><dd>39 / 40점 (Overall의 40%)</dd>
+        <dt>적용 범위</dt><dd>웹사이트 전체 페이지 공통</dd>
+      </dl>
+      <p style="margin-top:var(--space-4)">
+        체크 상태는 이 창에서만 유지됩니다. 새로고침하면 초기화되므로,
+        점검 결과를 남기려면 브라우저 인쇄 기능으로 PDF 저장하세요.
+      </p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check__box'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check'));
+  var fill = document.getElementById('progress-fill');
+  var count = document.getElementById('progress-count');
+  var currentFilter = 'all';
+
+  /* ---------- 진행률 ---------- */
+  function updateProgress() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var total = boxes.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+
+    fill.style.width = pct + '%';
+    count.innerHTML = '<b>' + done + '</b> / ' + total + ' 완료 · ' + pct + '%';
+
+    // 섹션별 진행률
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var slot = sec.querySelector('[data-section-progress]');
+      if (!slot) return;
+      var secBoxes = Array.prototype.slice.call(sec.querySelectorAll('.check__box'));
+      if (!secBoxes.length) return;
+      var secDone = secBoxes.filter(function (b) { return b.checked; }).length;
+      slot.textContent = secDone + ' / ' + secBoxes.length;
+      slot.style.color = (secDone === secBoxes.length)
+        ? 'var(--c-green)' : 'var(--color-text-mute)';
+    });
+  }
+
+  /* ---------- 필터 ---------- */
+  function applyFilter(mode) {
+    currentFilter = mode;
+    items.forEach(function (item) {
+      var box = item.querySelector('.check__box');
+      var show = true;
+
+      if (mode === 'todo') show = !box.checked;
+
+      item.classList.toggle('is-hidden', !show);
+    });
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      updateProgress();
+      if (currentFilter === 'todo') applyFilter('todo');
+    });
+  });
+
+  document.querySelectorAll('.filters__btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filters__btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  /* ---------- 초기화 ---------- */
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    updateProgress();
+    applyFilter(currentFilter);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>

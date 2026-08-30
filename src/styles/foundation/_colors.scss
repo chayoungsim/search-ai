@@ -1,0 +1,76 @@
+@use 'sass:color';
+@use '@/styles/abstracts/variables' as *;
+
+/* Color System */
+// 참고 사이트: https://geo-app-one-gray.vercel.app/ 색상 변수를 그대로 옮겨온다.
+// --color-bg / --color-muted / --color-line / --color-fail 는 참고 사이트의 변수명이며,
+// --color-background / --color-text-mute / --color-border / --color-error 는
+// 기존 코드가 참조하는 시맨틱 별칭이라 값이 항상 같이 바뀌도록 연결해 둔다.
+
+// Default theme (Light Mode)
+:root {
+  // Brand
+  --color-primary: #{$color-primary};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-primary-light: #{$color-primary-light};
+  --color-primary-hover: var(--color-primary-dark);
+  --color-link: var(--color-primary);
+
+  // Theme Colors (참고 사이트 변수명)
+  --color-black: #{$color-black};
+  --color-white: #{$color-white};
+  --color-bg: #{$color-background};
+  --color-text: #{$color-text};
+  --color-muted: #{$color-text-mute};
+  --color-line: #{$color-border};
+  --color-warn: #{$color-warn};
+  --color-fail: #{$color-error};
+  --color-fail-hover: #{color.adjust($color-error, $lightness: -10%)};
+
+  // 기존 시맨틱 별칭 (하위 호환)
+  --color-background: var(--color-bg);
+  --color-text-mute: var(--color-muted);
+  --color-border: var(--color-line);
+  --color-error: var(--color-fail);
+  --color-error-hover: var(--color-fail-hover);
+
+  // Grayscale Palette (다크모드 대응용)
+  --color-gray-100: #{$color-gray-100};
+  --color-gray-200: #{$color-gray-200};
+  --color-gray-300: #{$color-gray-300};
+  --color-gray-400: #{$color-gray-400};
+  --color-gray-500: #{$color-gray-500};
+  --color-gray-600: #{$color-gray-600};
+  --color-gray-700: #{$color-gray-700};
+  --color-gray-800: #{$color-gray-800};
+  --color-gray-900: #{$color-gray-900};
+}
+
+// Dark Mode: Applied when the user's OS is in dark mode OR when `data-theme="dark"` is set on the html element.
+// 참고 사이트 자체는 다크모드가 없어, 사이트의 --color-black(#171A18)을 다크 배경으로 사용해 확장했다.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: #{$color-black};
+    --color-text: #{$color-gray-200};
+    --color-muted: #{$color-gray-500};
+    --color-line: #{$color-gray-700};
+    --color-primary-hover: #{color.adjust($color-primary, $lightness: 10%)}; // 다크모드에서는 더 밝게
+    --color-fail-hover: #{color.adjust($color-error, $lightness: 10%)};
+  }
+  .roadmap .wrap{
+    background:transparent
+  }
+
+}
+
+[data-theme='dark'] {
+  --color-bg: #{$color-black};
+  --color-text: #{$color-gray-200};
+  --color-muted: #{$color-gray-500};
+  --color-line: #{$color-gray-700};
+  --color-primary-hover: #{color.adjust($color-primary, $lightness: 10%)}; // 다크모드에서는 더 밝게
+  --color-fail-hover: #{color.adjust($color-error, $lightness: 10%)};
+  .roadmap .wrap{
+    background:transparent
+  }
+}

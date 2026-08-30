@@ -1,0 +1,372 @@
+@use '@/styles/abstracts' as *;
+
+// ─────────────────────────────────────────────
+// /strategy 페이지 (B2B 컨설팅 5단계 프로세스) 전용 스타일
+// 원본: docs/B2B_컨설팅_진행_5단계_프로세스.html
+// 원본은 다크 테마 + 5색 배지 시스템이지만, 프로젝트 라이트 테마 +
+// 단일 그린 브랜드(--color-primary)에 맞춰 색상만 재해석해 이식한다.
+// ─────────────────────────────────────────────
+
+// 0. Intro (리드 문단 + 문서 Header)
+// ─────────────────────────────────────────────
+.strategy-intro {
+  background: var(--color-white);
+}
+
+.strategy-lead {
+  max-width: 88rem;
+  margin: 0 0 6rem;
+  color: var(--color-text);
+  font-size: clamp(1.8rem, 2.2vw, 2.2rem);
+  line-height: 1.8;
+
+  strong {
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-black);
+  }
+}
+
+.strategy-header {
+  max-width: 84rem;
+}
+
+.strategy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.05em;
+}
+
+// 1. Stage Overview (5-Step Nav)
+// ─────────────────────────────────────────────
+.strategy-overview {
+  background: var(--color-bg);
+}
+
+.stage-nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.6rem;
+}
+
+.stage-nav-item {
+  padding: 2.8rem 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  text-align: center;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+
+  &:hover {
+    transform: translateY(-0.4rem);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+.stage-nav-num {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stage-nav-title {
+  margin: 0;
+  color: var(--color-black);
+  font-size: 1.6rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+// 2. Stage Detail (Deep Dive)
+// ─────────────────────────────────────────────
+.strategy-detail {
+  background: var(--color-white);
+}
+
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 2.4rem;
+  padding: 3.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  transition: border-color 0.25s, box-shadow 0.25s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+.step-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+  height: 8rem;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.step-num {
+  font-size: 2.2rem;
+  font-weight: var(--font-weight-black);
+  line-height: 1;
+}
+
+.step-label {
+  margin-top: 0.4rem;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.step-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.step-title {
+  margin: 0;
+  color: var(--color-black);
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.03em;
+}
+
+.step-purpose {
+  flex-shrink: 0;
+  padding: 0.5rem 1.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.step-desc {
+  margin: 0 0 2rem;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: 1.6rem;
+}
+
+.task-item {
+  padding: 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.task-item-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 0.8rem;
+  color: var(--color-black);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.task-item p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+// 3. Dual Track Table
+// ─────────────────────────────────────────────
+.strategy-track {
+  background: var(--color-bg);
+}
+
+.track-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.track-table {
+  width: 100%;
+  min-width: 72rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.track-table th,
+.track-table td {
+  padding: 2rem 2.4rem;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+
+.track-table th {
+  background: var(--color-bg);
+  color: var(--color-black);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-black);
+  white-space: nowrap;
+}
+
+.track-table td {
+  color: var(--color-text);
+  font-size: 1.4rem;
+  line-height: 1.7;
+
+  strong {
+    color: var(--color-black);
+  }
+}
+
+.track-table tr:last-child td {
+  border-bottom: none;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.role-badge--dev {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.role-badge--mkt {
+  border: 1px solid var(--color-line);
+  background: var(--color-white);
+  color: var(--color-text);
+}
+
+// 4. Tips
+// ─────────────────────────────────────────────
+.strategy-tips {
+  background: var(--color-white);
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+  gap: 2rem;
+}
+
+.tip-card {
+  padding: 3.2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  transition: transform 0.25s, box-shadow 0.25s;
+
+  &:hover {
+    transform: translateY(-0.4rem);
+    box-shadow: var(--shadow-hover);
+  }
+
+  h3 {
+    margin: 0 0 1rem;
+    color: var(--color-black);
+    font-size: 1.8rem;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 1.4rem;
+    line-height: 1.7;
+  }
+}
+
+.tip-icon {
+  display: block;
+  margin-bottom: 1.2rem;
+  font-size: 2.6rem;
+}
+
+// ─────────────────────────────────────────────
+// 반응형 (900px / 600px, 페이지 계열 공통 브레이크포인트)
+// ─────────────────────────────────────────────
+@media (width <= 900px) {
+  .stage-nav {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .step-card {
+    grid-template-columns: 1fr;
+  }
+
+  .step-badge {
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    padding: 0.8rem 1.6rem;
+    gap: 0.8rem;
+  }
+
+  .step-label {
+    margin-top: 0;
+  }
+}
+
+@media (width <= 600px) {
+  .stage-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .step-card {
+    padding: 2.6rem 2.2rem;
+  }
+
+  .task-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .track-table th,
+  .track-table td {
+    padding: 1.6rem 1.8rem;
+  }
+
+  .tip-card {
+    padding: 2.6rem 2.2rem;
+  }
+}

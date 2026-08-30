@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AEO 체크리스트 | 17개 항목 점검</title>
+<meta name="description" content="AEO 진단 체크리스트 — Question Coverage · Direct Answer · Content Structure · Intent Matching · Answer Evidence · Question Expansion 6개 카테고리, 17개 항목(A01~A17) 기준 점검">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — SearchAI 디자인 가이드(그린 프라이머리) 체계
+   ============================================================ */
+:root{
+  --c-paper:#F5F7F4; --c-surface:#FFFFFF;
+  --c-ink:#171A18; --c-ink-2:#5A6069; --c-ink-3:#8B909A;
+  --c-rule:#DFE4DF; --c-rule-strong:#C9C9C1;
+  --c-green:#208B5C; --c-green-dark:#12633F; --c-green-wash:#E5F4EC;
+  --c-red:#D9534F;   --c-red-wash:#FCEDF1;
+  --c-amber:#8A5A00; --c-amber-wash:#FBF3E2;
+
+  --color-bg:var(--c-paper);
+  --color-surface:var(--c-surface);
+  --color-text-strong:var(--c-ink);
+  --color-text:var(--c-ink-2);
+  --color-text-mute:var(--c-ink-3);
+  --color-border:var(--c-rule);
+  --color-border-strong:var(--c-rule-strong);
+  --color-primary:var(--c-green);
+  --color-primary-wash:var(--c-green-wash);
+
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem;  --space-8:3rem;   --space-10:4rem;
+
+  --radius-sm:3px; --radius-md:6px; --radius-lg:10px; --radius-full:999px;
+  --shadow-sm:0 1px 2px rgba(20,22,26,.06);
+
+  --z-sticky:100; --z-header:300;
+
+  --font-body:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --focus-ring:2px solid var(--color-primary);
+  --focus-offset:2px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:1rem;line-height:1.7;letter-spacing:-.01em;
+}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--color-primary)}
+code,kbd{font-family:var(--font-mono);font-size:.85em}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset);border-radius:2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+}
+.skip-nav{
+  position:absolute;left:var(--space-4);top:-200%;z-index:999;
+  padding:var(--space-3) var(--space-5);
+  background:var(--color-text-strong);color:#fff;font-weight:600;
+  text-decoration:none;border-radius:0 0 var(--radius-md) var(--radius-md);
+}
+.skip-nav:focus{top:0}
+
+.wrap{max-width:62rem;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead{padding:var(--space-10) 0 var(--space-6)}
+.masthead__eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-4);
+}
+.masthead__title{
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.15;letter-spacing:-.035em;
+  font-weight:800;color:var(--color-text-strong);
+}
+.masthead__lead{margin-top:var(--space-4);max-width:44rem}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));
+  gap:1px;background:var(--color-border);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);overflow:hidden;margin-top:var(--space-6);
+}
+.stats__cell{background:var(--color-surface);padding:var(--space-4)}
+.stats__num{
+  display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:700;
+  color:var(--color-text-strong);line-height:1.2;
+}
+.stats__label{display:block;font-size:.78rem;color:var(--color-text-mute);margin-top:var(--space-1)}
+
+/* ============================================================
+   진행률 바 — 시그니처
+   ============================================================ */
+.tracker{
+  position:sticky;top:0;z-index:var(--z-header);
+  background:rgba(245,247,244,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.tracker__inner{
+  max-width:62rem;margin:0 auto;padding:var(--space-3) var(--space-5);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);
+}
+.tracker__meter{flex:1 1 12rem;min-width:10rem}
+.tracker__bar{
+  height:.55rem;background:var(--color-border);border-radius:var(--radius-full);
+  overflow:hidden;
+}
+.tracker__fill{
+  display:block;height:100%;width:0%;background:var(--color-primary);
+  border-radius:var(--radius-full);transition:width .25s ease;
+}
+.tracker__count{
+  font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-mute);
+  margin-top:var(--space-1);display:block;
+}
+.tracker__count b{color:var(--color-text-strong);font-weight:700}
+
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1)}
+.filters__btn{
+  appearance:none;border:1px solid var(--color-border-strong);
+  background:var(--color-surface);color:var(--color-text);
+  padding:.35rem .8rem;border-radius:var(--radius-full);
+  font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.filters__btn:hover{border-color:var(--color-text-mute)}
+.filters__btn[aria-pressed="true"]{
+  background:var(--color-text-strong);border-color:var(--color-text-strong);color:#fff;
+}
+.filters__reset{
+  appearance:none;border:0;background:transparent;color:var(--color-text-mute);
+  font-family:inherit;font-size:.78rem;cursor:pointer;text-decoration:underline;
+  padding:.35rem .5rem;border-radius:var(--radius-sm);
+}
+.filters__reset:hover{color:var(--c-red)}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
+.section__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-3);
+  margin-bottom:var(--space-2);
+}
+.section__num{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.1em;color:var(--color-primary);
+}
+.section__title{
+  font-size:1.4rem;letter-spacing:-.025em;font-weight:700;color:var(--color-text-strong);
+}
+.section__progress{
+  margin-left:auto;font-family:var(--font-mono);font-size:.72rem;
+  color:var(--color-text-mute);white-space:nowrap;
+}
+.section__desc{margin-bottom:var(--space-5);max-width:46rem;font-size:.93rem}
+
+/* ============================================================
+   CHECK ITEM
+   ============================================================ */
+.checks{
+  border:1px solid var(--color-border);border-radius:var(--radius-lg);
+  background:var(--color-surface);overflow:hidden;
+}
+.check{border-bottom:1px solid var(--color-border)}
+.check:last-child{border-bottom:0}
+.check.is-hidden{display:none}
+
+.check__main{
+  display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-4);cursor:pointer;
+}
+.check__main:hover{background:var(--c-paper)}
+.check__box{
+  flex:none;width:1.2rem;height:1.2rem;margin:.3rem 0 0;
+  accent-color:var(--color-primary);cursor:pointer;
+}
+.check__body{flex:1;min-width:0}
+.check__title{
+  font-size:.95rem;font-weight:600;color:var(--color-text-strong);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);
+}
+.check__desc{margin-top:var(--space-1);font-size:.87rem;color:var(--color-text)}
+.check__desc code{
+  background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);
+  color:var(--color-text-strong);
+}
+
+.check input:checked ~ .check__body .check__title{
+  color:var(--color-text-mute);text-decoration:line-through;text-decoration-thickness:1px;
+}
+.check input:checked ~ .check__body .check__desc{color:var(--color-text-mute)}
+
+.tag{
+  display:inline-block;padding:.1em .55em;border-radius:var(--radius-full);
+  font-family:var(--font-mono);font-size:.66rem;font-weight:500;
+  border:1px solid currentColor;white-space:nowrap;
+}
+.tag--weight{color:var(--color-primary);background:var(--color-primary-wash)}
+
+/* 체크 방법 접기 */
+.check details{margin:var(--space-3) 0 0}
+.check summary{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-mono);font-size:.72rem;color:var(--color-primary);
+  cursor:pointer;padding:.2rem .1rem;border-radius:var(--radius-sm);list-style:none;
+}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:"▸";transition:transform .15s ease;display:inline-block}
+.check details[open] summary::before{transform:rotate(90deg)}
+.check__how{
+  margin:var(--space-2) 0 0;padding:var(--space-3) var(--space-4);
+  background:var(--c-paper);border:1px solid var(--color-border);border-radius:var(--radius-md);
+  font-size:.83rem;line-height:1.85;
+}
+.check__how li{position:relative;padding-left:1.1em}
+.check__how li::before{content:"–";position:absolute;left:0;color:var(--color-text-mute)}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note{
+  border-left:3px solid var(--color-primary);background:var(--color-primary-wash);
+  padding:var(--space-4) var(--space-5);border-radius:0 var(--radius-md) var(--radius-md) 0;
+  margin:var(--space-5) 0;font-size:.89rem;color:var(--color-text-strong);
+}
+.note code{background:rgba(255,255,255,.7);padding:.1em .4em;border-radius:var(--radius-sm)}
+
+.foot{padding:var(--space-8) 0 var(--space-10);font-size:.82rem;color:var(--color-text-mute);border-top:1px solid var(--color-border)}
+.foot dl{display:flex;flex-wrap:wrap;gap:var(--space-5);font-family:var(--font-mono);font-size:.73rem}
+.foot dt{color:var(--color-text-mute)}
+.foot dd{margin:0;color:var(--color-text-strong)}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  .tracker,.skip-nav,.filters,.check summary{display:none !important}
+  .check details{display:block !important}
+  body{background:#fff;font-size:10pt}
+  .section{break-inside:avoid;padding:1rem 0}
+  .checks,.check{break-inside:avoid}
+  .note{background:#fff;border:1px solid #999}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">본문 바로가기</a>
+
+<!-- // 진행률 트래커 -->
+<div class="tracker">
+  <div class="tracker__inner">
+    <div class="tracker__meter">
+      <div class="tracker__bar"><span class="tracker__fill" id="progress-fill"></span></div>
+      <span class="tracker__count" id="progress-count" role="status">
+        <b>0</b> / 0 완료
+      </span>
+      <span class="sr-only" id="progress-label">전체 점검 진행률</span>
+    </div>
+
+    <div class="filters" role="group" aria-label="항목 필터">
+      <button type="button" class="filters__btn" data-filter="all" aria-pressed="true">전체</button>
+      <button type="button" class="filters__btn" data-filter="todo" aria-pressed="false">미완료만</button>
+    </div>
+    <button type="button" class="filters__reset" id="reset-btn">전체 해제</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">AEO 진단 · Question Coverage부터 Question Expansion까지</p>
+      <h1 class="masthead__title">질문에 답하지 못하면<br>AI는 인용하지 않습니다</h1>
+      <p class="masthead__lead">
+        Lighthouse에는 AEO 점수가 따로 없습니다. <code>&lt;h2&gt;</code>가 질문 형태인지 하나만으로도
+        AI가 이 콘텐츠를 답변으로 채택할 확률이 달라집니다. 이 체크리스트는 Question Coverage부터
+        Question Expansion까지 17개 항목을 실제로 하나씩 확인하는 순서로 정리한 것입니다.
+      </p>
+
+      <div class="stats">
+        <div class="stats__cell"><span class="stats__num">6</span><span class="stats__label">카테고리</span></div>
+        <div class="stats__cell"><span class="stats__num">17</span><span class="stats__label">진단 항목</span></div>
+        <div class="stats__cell"><span class="stats__num">30</span><span class="stats__label">합계 점수</span></div>
+        <div class="stats__cell"><span class="stats__num">30<span style="font-size:1rem">%</span></span><span class="stats__label">Overall 비중</span></div>
+      </div>
+
+      <div class="note">
+        <b>AEO는 Overall Score(100점)의 30%를 차지합니다.</b>
+        Question Coverage 8점 · Direct Answer 7점 · Content Structure 5점 · Intent Matching 4점 ·
+        Answer Evidence 3점 · Question Expansion 3점, 총 17개 항목(A01~A17)으로 진단합니다.
+        각 항목 옆 <span class="tag tag--weight">Weight N</span> 배지는 해당 항목이 Overall Score에서 차지하는 점수입니다.
+      </div>
+    </header>
+
+    <!-- ============ 01 Question Coverage ============ -->
+    <section class="section" id="s1" aria-labelledby="s1-title">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" id="s1-title">Question Coverage</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">입력 키워드에서 파생되는 핵심 질문과 관련 질문을 콘텐츠가 얼마나 폭넓게 다루고 있는지를 확인하는 영역입니다. 사용자가 실제로 궁금해할 질문의 유형과 후속 질문까지 커버해야 답변 엔진이 이 콘텐츠를 신뢰할 수 있는 답변 후보로 인식합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A01 Core Question <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">입력 키워드에서 도출한 핵심 질문(예: "React 웹 접근성이란?")에 대응하는 콘텐츠가 실제로 존재해야 AI가 이 페이지를 답변 후보로 고려합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>핵심 질문(예: "React 웹 접근성이란?")에 대응하는 콘텐츠가 페이지 내에 존재하는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A02 Question Coverage <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">키워드의 검색 의도에 따라 정의형·방법형·비교형·문제해결형·구매행동형 질문 중 필요한 유형을 선택적으로 다뤄야 다양한 질문 방식에 대응할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>정의형 질문</li>
+                  <li>방법형 질문</li>
+                  <li>비교형 질문</li>
+                  <li>문제해결형 질문</li>
+                  <li>구매/행동형 질문</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A03 Related Questions <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">관련 질문과 후속 질문까지 콘텐츠가 다루고 있으면, 하나의 주제를 깊이 있게 커버한다는 신호로 작용해 답변 엔진의 신뢰도를 높입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>관련 질문 존재</li>
+                  <li>질문 간 topic 관계 존재</li>
+                  <li>후속 질문에 대한 콘텐츠 존재</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 02 Direct Answer ============ -->
+    <section class="section" id="s2" aria-labelledby="s2-title">
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title" id="s2-title">Direct Answer</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">질문에 대한 답변이 얼마나 명확하고, 질문 바로 다음에 위치하며, 완결된 형태로 제공되는지를 평가합니다. 결론을 먼저 제시하고 핵심 요소를 빠짐없이 담은 답변이라야 AI가 그대로 인용하기 좋습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A04 Definition Answer <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">핵심 질문에 대한 정의형 답변이 얼마나 명확한지를 0~1점 척도로 평가해, 애매한 설명과 명확한 정의를 구분합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>0점 · 답변 없음</li>
+                  <li>0.5점 · 답변이 불명확함</li>
+                  <li>0.75점 · 부분 충족</li>
+                  <li>1점 · 명확한 정의형 답변 제공</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A05 Answer Position <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">답변이 핵심 질문 바로 다음에 위치해야 사용자와 AI 모두 질문과 답을 즉시 연결지어 이해할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>핵심 질문 직후에 답변이 위치하는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A06 Answer Clarity <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">결론이 먼저 나오고 불필요한 수식어 없이 한 문단에 하나의 의미만 담겨야 답변이 명확하게 전달됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>결론이 먼저 나오는가?</li>
+                  <li>불필요한 표현이 적은가?</li>
+                  <li>한 문단에 하나의 핵심 의미가 있는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A07 Answer Completeness <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">질문의 핵심 요소, 조건과 예외, 실제 방법과 예제까지 담겨 있어야 추가 검색 없이도 완결된 답으로 인정받습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>질문의 핵심 요소 포함</li>
+                  <li>조건 / 예외 설명</li>
+                  <li>실제 방법 제공</li>
+                  <li>필요한 경우 예제 제공</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 03 Content Structure ============ -->
+    <section class="section" id="s3" aria-labelledby="s3-title">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" id="s3-title">Content Structure</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">콘텐츠가 질문 형태의 헤딩, 리스트·표, FAQ, 스캔하기 쉬운 구조로 짜여 있는지를 평가합니다. 구조가 명확할수록 AI가 질문과 답변 단위를 정확히 추출할 수 있습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A08 Heading as Questions <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">H2/H3 헤딩이 실제 사용자 질문 형태로 작성되어 있으면 AI가 헤딩 단위로 질문-답변 쌍을 쉽게 추출할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>주요 heading이 질문 형태(또는 질문에 대응하는 명확한 주제)로 작성되어 있는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A09 Lists / Tables <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">단계·비교·목록·표 형식은 정보를 구조화해 AI와 사용자 모두가 핵심 내용을 빠르게 파악하도록 돕습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>단계형 정보</li>
+                  <li>비교 정보</li>
+                  <li>목록 정보</li>
+                  <li>표 정보</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A10 FAQ / Q&amp;A Content <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">FAQ Schema 존재 여부만으로는 부족하며, 실제 사용자 질문에 유용하게 답하는 FAQ/Q&amp;A 구조인지가 중요합니다(2026년부터 Google이 FAQ rich result를 더 이상 표시하지 않도록 변경했기 때문).</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>FAQ 콘텐츠(또는 Q&amp;A 전용 단락)가 존재하는가?</li>
+                  <li>FAQ가 실제 사용자 질문에 유용하게 답하는가? (Schema 존재 여부만으로 판단하지 않음)</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A11 Scannability <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">짧은 문단, 명확한 헤딩, 리스트, 강조, 핵심 정보 우선 배치는 사람과 AI 모두가 콘텐츠를 빠르게 훑어 필요한 답을 찾도록 돕습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>짧은 문단</li>
+                  <li>명확한 heading</li>
+                  <li>리스트</li>
+                  <li>강조</li>
+                  <li>핵심 정보 우선</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 04 Intent Matching ============ -->
+    <section class="section" id="s4" aria-labelledby="s4-title">
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title" id="s4-title">Intent Matching</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">키워드의 검색 의도, 페이지의 의도, 실제 답변의 의도가 서로 일치하는지를 확인합니다. 6가지 검색 의도 유형을 분석하고 이 세 단계가 어긋나지 않아야 정확한 답변으로 평가받습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A12 Search Intent <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">Informational부터 Problem-solving까지 6가지 검색 의도 유형 중 어디에 해당하는지 정확히 분석해야 콘텐츠 방향을 올바르게 설계할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Informational</li>
+                  <li>Navigational</li>
+                  <li>Commercial</li>
+                  <li>Transactional</li>
+                  <li>Local</li>
+                  <li>Problem-solving</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A13 Content Intent Match <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">Keyword Intent → Page Intent → Answer Intent 세 단계가 서로 어긋나면 검색엔진이 이 페이지를 해당 질문의 답으로 매칭하지 않습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Keyword Intent, Page Intent, Answer Intent가 서로 일치하는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 05 Answer Evidence ============ -->
+    <section class="section" id="s5" aria-labelledby="s5-title">
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title" id="s5-title">Answer Evidence</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">답변을 뒷받침하는 출처, 작성자 정보, 최신성을 평가합니다. 근거가 명확한 콘텐츠일수록 답변 엔진이 안심하고 인용할 수 있습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A14 Source <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">공식 출처와 외부 출처, 참고자료가 명시되어 있으면 답변의 신뢰도를 뒷받침하는 근거가 됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>공식 출처</li>
+                  <li>외부 출처</li>
+                  <li>참고자료</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A15 Author / Expertise <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">작성자와 그 전문성, 소속 조직 정보가 드러나야 콘텐츠의 권위와 신뢰도를 검색엔진과 AI가 판단할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>작성자</li>
+                  <li>작성자 전문성</li>
+                  <li>조직 정보</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A16 Freshness <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">작성일과 수정일, 최신 정보 반영 여부는 답변이 지금도 유효한지를 판단하는 핵심 신호입니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>작성일</li>
+                  <li>수정일</li>
+                  <li>최신 정보</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 06 Question Expansion ============ -->
+    <section class="section" id="s6" aria-labelledby="s6-title">
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title" id="s6-title">Question Expansion</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">핵심 질문에서 파생되는 연관 질문과 키워드까지 콘텐츠가 폭넓게 다루고 있는지를 확인합니다. 하나의 주제를 다각도로 커버할수록 다양한 질문에 대한 답변 후보가 될 수 있습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">A17 Related Query Coverage <span class="tag tag--weight">Weight 3</span></span>
+              <span class="check__desc">LLM이나 검색 쿼리 분석으로 도출한 연관 질문·키워드까지 폭넓게 다루고 있어야 다양한 형태의 질문에서도 답변 후보로 노출될 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>LLM 또는 검색 query 분석으로 파생된 연관 질문/키워드를 사이트 콘텐츠가 충분히 다루고 있는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      <dl>
+        <dt>버전</dt><dd>1.0</dd>
+        <dt>기준</dt><dd>AEO 체크리스트 (docs/AEO 체크리스트.md)</dd>
+        <dt>합계</dt><dd>30 / 30점 (Overall의 30%)</dd>
+        <dt>적용 범위</dt><dd>웹사이트 전체 페이지 공통</dd>
+      </dl>
+      <p style="margin-top:var(--space-4)">
+        체크 상태는 이 창에서만 유지됩니다. 새로고침하면 초기화되므로,
+        점검 결과를 남기려면 브라우저 인쇄 기능으로 PDF 저장하세요.
+      </p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check__box'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check'));
+  var fill = document.getElementById('progress-fill');
+  var count = document.getElementById('progress-count');
+  var currentFilter = 'all';
+
+  /* ---------- 진행률 ---------- */
+  function updateProgress() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var total = boxes.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+
+    fill.style.width = pct + '%';
+    count.innerHTML = '<b>' + done + '</b> / ' + total + ' 완료 · ' + pct + '%';
+
+    // 섹션별 진행률
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var slot = sec.querySelector('[data-section-progress]');
+      if (!slot) return;
+      var secBoxes = Array.prototype.slice.call(sec.querySelectorAll('.check__box'));
+      if (!secBoxes.length) return;
+      var secDone = secBoxes.filter(function (b) { return b.checked; }).length;
+      slot.textContent = secDone + ' / ' + secBoxes.length;
+      slot.style.color = (secDone === secBoxes.length)
+        ? 'var(--c-green)' : 'var(--color-text-mute)';
+    });
+  }
+
+  /* ---------- 필터 ---------- */
+  function applyFilter(mode) {
+    currentFilter = mode;
+    items.forEach(function (item) {
+      var box = item.querySelector('.check__box');
+      var show = true;
+
+      if (mode === 'todo') show = !box.checked;
+
+      item.classList.toggle('is-hidden', !show);
+    });
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      updateProgress();
+      if (currentFilter === 'todo') applyFilter('todo');
+    });
+  });
+
+  document.querySelectorAll('.filters__btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filters__btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  /* ---------- 초기화 ---------- */
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    updateProgress();
+    applyFilter(currentFilter);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>

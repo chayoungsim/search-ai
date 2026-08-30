@@ -1,0 +1,254 @@
+@use '@/styles/abstracts' as *;
+
+// ─────────────────────────────────────────────
+// /contact 페이지 (상담 신청 폼)
+// ─────────────────────────────────────────────
+.contact-intro {
+  background: var(--color-white);
+  padding-bottom: 5rem;
+}
+
+.contact-form-section {
+  background: var(--color-bg);
+}
+
+.contact-form {
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: 4.8rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.8rem 2.4rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.form-field--full {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  color: var(--color-black);
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.form-required {
+  margin-left: 0.3rem;
+  color: var(--color-fail);
+}
+
+.form-optional {
+  margin-left: 0.6rem;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-normal);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 1.4rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: var(--color-muted);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+}
+
+.form-textarea {
+  min-height: 15rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.form-select {
+  cursor: pointer;
+}
+
+// 파일첨부 드롭존
+.form-file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 3.2rem 2rem;
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+  }
+}
+
+.form-file-icon {
+  font-size: 2.4rem;
+}
+
+.form-file-text {
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+}
+
+.form-file-hint {
+  color: var(--color-muted);
+  font-size: 1.2rem;
+}
+
+.form-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.form-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.form-file-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem 1.4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  font-size: 1.3rem;
+}
+
+.form-file-name {
+  overflow: hidden;
+  flex: 1;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-file-size {
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+
+.form-file-remove {
+  flex-shrink: 0;
+  padding: 0.2rem 0.4rem;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 1.3rem;
+  line-height: 1;
+
+  &:hover {
+    color: var(--color-fail);
+  }
+}
+
+.form-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+
+  .cta-button {
+    min-width: 22rem;
+  }
+}
+
+// 제출 완료 화면
+.form-success {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 6.4rem 2rem;
+  text-align: center;
+
+  h2 {
+    margin: 2rem 0 1.6rem;
+    color: var(--color-black);
+    font-size: 2.8rem;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    margin: 0 0 3.2rem;
+    color: var(--color-muted);
+    font-size: 1.5rem;
+    line-height: 1.8;
+  }
+}
+
+.form-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 2.8rem;
+  font-weight: var(--font-weight-black);
+}
+
+// ─────────────────────────────────────────────
+// 반응형
+// ─────────────────────────────────────────────
+@media (width <= 900px) {
+  .contact-form {
+    padding: 3.2rem;
+  }
+}
+
+@media (width <= 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form {
+    padding: 2.6rem 2.2rem;
+  }
+
+  .form-submit .cta-button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,185 @@
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  border-bottom: 1px solid rgba(223, 228, 223, 0.7);
+  background: rgba(245, 247, 244, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+}
+
+.logo {
+  font-size: 19px;
+  font-weight: 800;
+
+  letter-spacing: -0.04em;
+}
+
+.logo span {
+  color: var(--color-primary);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav a {
+  position: relative;
+  color: var(--color-muted);
+  font-size: 1.6rem;
+  font-weight: 600;
+  transition: color 0.25s ease;
+}
+
+.nav a::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+
+  width: 0;
+  height: 1px;
+
+  background: var(--color-primary);
+
+  transition: width 0.25s ease;
+}
+.nav a.active,
+.nav a:hover {
+  color: var(--color-primary);
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+// .cta-button 재사용 + 헤더 높이에 맞춰 축소
+// (구체성을 .cta-button보다 높여 forward 순서와 무관하게 항상 적용되도록 함)
+.header-actions .cta-button {
+  min-height: 4rem;
+  padding: 0 2rem;
+  font-size: 1.3rem;
+}
+
+// nav + header-actions를 감싸는 래퍼
+// 데스크톱: 일반 flex 아이템 / 모바일(<=900px): 드롭다운 패널로 전환
+.header-menu {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+// 메뉴 오픈 시 하단에 깔리는 dim 레이어 (데스크톱에서는 숨김)
+.header-backdrop {
+  display: none;
+}
+
+// 햄버거 토글 버튼 (데스크톱에서는 숨김)
+.header-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+// ─────────────────────────────────────────────
+// 모바일: 햄버거 버튼 + 드롭다운 메뉴
+// ─────────────────────────────────────────────
+@media (width <= 900px) {
+  .header-toggle {
+    display: inline-flex;
+  }
+
+  .header-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.4rem;
+    padding: 2.4rem var(--container-padding) 3.2rem;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-line);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.8rem);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+
+  .header-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.6rem;
+  }
+
+  // 메뉴 오픈 시 하단에 깔리는 dim 레이어
+  // (#header는 backdrop-filter가 있어 그 자식으로 두면 position:fixed의
+  // 기준이 뷰포트가 아닌 #header 박스로 바뀌므로, 반드시 #header 밖의
+  // 형제 요소로 렌더링한다.)
+  .header-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(23, 26, 24, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s;
+
+    &::before {
+        content: '';
+        display:block;
+        width: 100%;
+        height: 30%;
+        background:#fff;
+    }
+  }
+
+  .header-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// 640px 이하: header-actions 버튼 2개를 세로 1개씩으로 전환
+@media (width <= 640px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-actions .cta-button {
+    width: 100%;
+  }
+}

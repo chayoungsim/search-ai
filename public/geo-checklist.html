@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GEO 체크리스트 | 22개 항목 점검</title>
+<meta name="description" content="GEO 진단 체크리스트 — Entity Clarity · Evidence/Provenance · Citation Readiness · Topical Coverage · Freshness/Consistency · AI Visibility 6개 카테고리, 22개 항목(G01~G22) 기준 점검">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — SearchAI 디자인 가이드(그린 프라이머리) 체계
+   ============================================================ */
+:root{
+  --c-paper:#F5F7F4; --c-surface:#FFFFFF;
+  --c-ink:#171A18; --c-ink-2:#5A6069; --c-ink-3:#8B909A;
+  --c-rule:#DFE4DF; --c-rule-strong:#C9C9C1;
+  --c-green:#208B5C; --c-green-dark:#12633F; --c-green-wash:#E5F4EC;
+  --c-red:#D9534F;   --c-red-wash:#FCEDF1;
+  --c-amber:#8A5A00; --c-amber-wash:#FBF3E2;
+
+  --color-bg:var(--c-paper);
+  --color-surface:var(--c-surface);
+  --color-text-strong:var(--c-ink);
+  --color-text:var(--c-ink-2);
+  --color-text-mute:var(--c-ink-3);
+  --color-border:var(--c-rule);
+  --color-border-strong:var(--c-rule-strong);
+  --color-primary:var(--c-green);
+  --color-primary-wash:var(--c-green-wash);
+
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem;  --space-8:3rem;   --space-10:4rem;
+
+  --radius-sm:3px; --radius-md:6px; --radius-lg:10px; --radius-full:999px;
+  --shadow-sm:0 1px 2px rgba(20,22,26,.06);
+
+  --z-sticky:100; --z-header:300;
+
+  --font-body:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --focus-ring:2px solid var(--color-primary);
+  --focus-offset:2px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:1rem;line-height:1.7;letter-spacing:-.01em;
+}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--color-primary)}
+code,kbd{font-family:var(--font-mono);font-size:.85em}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset);border-radius:2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+}
+.skip-nav{
+  position:absolute;left:var(--space-4);top:-200%;z-index:999;
+  padding:var(--space-3) var(--space-5);
+  background:var(--color-text-strong);color:#fff;font-weight:600;
+  text-decoration:none;border-radius:0 0 var(--radius-md) var(--radius-md);
+}
+.skip-nav:focus{top:0}
+
+.wrap{max-width:62rem;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead{padding:var(--space-10) 0 var(--space-6)}
+.masthead__eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-4);
+}
+.masthead__title{
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.15;letter-spacing:-.035em;
+  font-weight:800;color:var(--color-text-strong);
+}
+.masthead__lead{margin-top:var(--space-4);max-width:44rem}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));
+  gap:1px;background:var(--color-border);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);overflow:hidden;margin-top:var(--space-6);
+}
+.stats__cell{background:var(--color-surface);padding:var(--space-4)}
+.stats__num{
+  display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:700;
+  color:var(--color-text-strong);line-height:1.2;
+}
+.stats__label{display:block;font-size:.78rem;color:var(--color-text-mute);margin-top:var(--space-1)}
+
+/* ============================================================
+   진행률 바 — 시그니처
+   ============================================================ */
+.tracker{
+  position:sticky;top:0;z-index:var(--z-header);
+  background:rgba(245,247,244,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.tracker__inner{
+  max-width:62rem;margin:0 auto;padding:var(--space-3) var(--space-5);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);
+}
+.tracker__meter{flex:1 1 12rem;min-width:10rem}
+.tracker__bar{
+  height:.55rem;background:var(--color-border);border-radius:var(--radius-full);
+  overflow:hidden;
+}
+.tracker__fill{
+  display:block;height:100%;width:0%;background:var(--color-primary);
+  border-radius:var(--radius-full);transition:width .25s ease;
+}
+.tracker__count{
+  font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-mute);
+  margin-top:var(--space-1);display:block;
+}
+.tracker__count b{color:var(--color-text-strong);font-weight:700}
+
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1)}
+.filters__btn{
+  appearance:none;border:1px solid var(--color-border-strong);
+  background:var(--color-surface);color:var(--color-text);
+  padding:.35rem .8rem;border-radius:var(--radius-full);
+  font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.filters__btn:hover{border-color:var(--color-text-mute)}
+.filters__btn[aria-pressed="true"]{
+  background:var(--color-text-strong);border-color:var(--color-text-strong);color:#fff;
+}
+.filters__reset{
+  appearance:none;border:0;background:transparent;color:var(--color-text-mute);
+  font-family:inherit;font-size:.78rem;cursor:pointer;text-decoration:underline;
+  padding:.35rem .5rem;border-radius:var(--radius-sm);
+}
+.filters__reset:hover{color:var(--c-red)}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
+.section__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-3);
+  margin-bottom:var(--space-2);
+}
+.section__num{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.1em;color:var(--color-primary);
+}
+.section__title{
+  font-size:1.4rem;letter-spacing:-.025em;font-weight:700;color:var(--color-text-strong);
+}
+.section__progress{
+  margin-left:auto;font-family:var(--font-mono);font-size:.72rem;
+  color:var(--color-text-mute);white-space:nowrap;
+}
+.section__desc{margin-bottom:var(--space-5);max-width:46rem;font-size:.93rem}
+
+/* ============================================================
+   CHECK ITEM
+   ============================================================ */
+.checks{
+  border:1px solid var(--color-border);border-radius:var(--radius-lg);
+  background:var(--color-surface);overflow:hidden;
+}
+.check{border-bottom:1px solid var(--color-border)}
+.check:last-child{border-bottom:0}
+.check.is-hidden{display:none}
+
+.check__main{
+  display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-4);cursor:pointer;
+}
+.check__main:hover{background:var(--c-paper)}
+.check__box{
+  flex:none;width:1.2rem;height:1.2rem;margin:.3rem 0 0;
+  accent-color:var(--color-primary);cursor:pointer;
+}
+.check__body{flex:1;min-width:0}
+.check__title{
+  font-size:.95rem;font-weight:600;color:var(--color-text-strong);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);
+}
+.check__desc{margin-top:var(--space-1);font-size:.87rem;color:var(--color-text)}
+.check__desc code{
+  background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);
+  color:var(--color-text-strong);
+}
+
+.check input:checked ~ .check__body .check__title{
+  color:var(--color-text-mute);text-decoration:line-through;text-decoration-thickness:1px;
+}
+.check input:checked ~ .check__body .check__desc{color:var(--color-text-mute)}
+
+.tag{
+  display:inline-block;padding:.1em .55em;border-radius:var(--radius-full);
+  font-family:var(--font-mono);font-size:.66rem;font-weight:500;
+  border:1px solid currentColor;white-space:nowrap;
+}
+.tag--weight{color:var(--color-primary);background:var(--color-primary-wash)}
+
+/* 체크 방법 접기 */
+.check details{margin:var(--space-3) 0 0}
+.check summary{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-mono);font-size:.72rem;color:var(--color-primary);
+  cursor:pointer;padding:.2rem .1rem;border-radius:var(--radius-sm);list-style:none;
+}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:"▸";transition:transform .15s ease;display:inline-block}
+.check details[open] summary::before{transform:rotate(90deg)}
+.check__how{
+  margin:var(--space-2) 0 0;padding:var(--space-3) var(--space-4);
+  background:var(--c-paper);border:1px solid var(--color-border);border-radius:var(--radius-md);
+  font-size:.83rem;line-height:1.85;
+}
+.check__how li{position:relative;padding-left:1.1em}
+.check__how li::before{content:"–";position:absolute;left:0;color:var(--color-text-mute)}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note{
+  border-left:3px solid var(--color-primary);background:var(--color-primary-wash);
+  padding:var(--space-4) var(--space-5);border-radius:0 var(--radius-md) var(--radius-md) 0;
+  margin:var(--space-5) 0;font-size:.89rem;color:var(--color-text-strong);
+}
+.note code{background:rgba(255,255,255,.7);padding:.1em .4em;border-radius:var(--radius-sm)}
+
+.foot{padding:var(--space-8) 0 var(--space-10);font-size:.82rem;color:var(--color-text-mute);border-top:1px solid var(--color-border)}
+.foot dl{display:flex;flex-wrap:wrap;gap:var(--space-5);font-family:var(--font-mono);font-size:.73rem}
+.foot dt{color:var(--color-text-mute)}
+.foot dd{margin:0;color:var(--color-text-strong)}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  .tracker,.skip-nav,.filters,.check summary{display:none !important}
+  .check details{display:block !important}
+  body{background:#fff;font-size:10pt}
+  .section{break-inside:avoid;padding:1rem 0}
+  .checks,.check{break-inside:avoid}
+  .note{background:#fff;border:1px solid #999}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">본문 바로가기</a>
+
+<!-- // 진행률 트래커 -->
+<div class="tracker">
+  <div class="tracker__inner">
+    <div class="tracker__meter">
+      <div class="tracker__bar"><span class="tracker__fill" id="progress-fill"></span></div>
+      <span class="tracker__count" id="progress-count" role="status">
+        <b>0</b> / 0 완료
+      </span>
+      <span class="sr-only" id="progress-label">전체 점검 진행률</span>
+    </div>
+
+    <div class="filters" role="group" aria-label="항목 필터">
+      <button type="button" class="filters__btn" data-filter="all" aria-pressed="true">전체</button>
+      <button type="button" class="filters__btn" data-filter="todo" aria-pressed="false">미완료만</button>
+    </div>
+    <button type="button" class="filters__reset" id="reset-btn">전체 해제</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">GEO 진단 · Entity Clarity부터 AI Visibility까지</p>
+      <h1 class="masthead__title">AI가 인용하지 않으면<br>보이지 않는 것과 같습니다</h1>
+      <p class="masthead__lead">
+        GEO Score는 실제 AI Citation Score와는 다른 개념입니다. 인용 데이터가 없다고 0점 처리하지
+        않듯, 이 체크리스트도 Entity Clarity부터 AI Visibility까지 22개 항목을 Rule 기준으로
+        하나씩 확인하는 순서로 정리한 것입니다.
+      </p>
+
+      <div class="stats">
+        <div class="stats__cell"><span class="stats__num">6</span><span class="stats__label">카테고리</span></div>
+        <div class="stats__cell"><span class="stats__num">22</span><span class="stats__label">진단 항목</span></div>
+        <div class="stats__cell"><span class="stats__num">30</span><span class="stats__label">합계 점수</span></div>
+        <div class="stats__cell"><span class="stats__num">30<span style="font-size:1rem">%</span></span><span class="stats__label">Overall 비중</span></div>
+      </div>
+
+      <div class="note">
+        <b>GEO는 Overall Score(100점)의 30%를 차지합니다.</b>
+        Entity Clarity 7점 · Evidence/Provenance 7점 · Citation Readiness 6점 · Topical Coverage 5점 ·
+        Freshness/Consistency 3점 · AI Visibility 2점, 총 22개 항목(G01~G22)으로 진단합니다.
+        (GEO Score는 실제 AI Citation Score와는 다른 개념으로, 인용 데이터가 없다고 해서 0점 처리하지
+        않고 Rule 기반 + AI 추정으로 평가합니다.) 각 항목 옆 <span class="tag tag--weight">Weight N</span>
+        배지는 해당 항목이 Overall Score에서 차지하는 점수입니다.
+      </div>
+    </header>
+
+    <!-- ============ 01 Entity Clarity ============ -->
+    <section class="section" id="s1" aria-labelledby="s1-title">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" id="s1-title">Entity Clarity</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">사이트가 무엇에 관한 콘텐츠인지, 그 주체(Entity)가 누구인지 AI가 명확히 식별할 수 있는지를 평가합니다. 적절한 Schema와 일관된 명칭, Entity 간 관계가 정의되어 있어야 AI가 정보를 정확히 구조화해 이해할 수 있습니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G01 Primary Entity <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">사이트가 어떤 주체(기업/제품/서비스/인물/기관)에 관한 것인지 명확해야 AI가 콘텐츠의 정체성을 정확히 파악하고 인용할 대상으로 인식할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>사이트가 무엇에 관한 것인지(Company / Product / Service / Person / Organization) 명확한가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G02 Entity Schema <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">페이지 유형에 맞는 Schema(Organization, Product, Article 등)를 사용하면 AI가 엔티티의 속성과 유형을 구조적으로 이해할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Organization</li>
+                  <li>Person</li>
+                  <li>Product</li>
+                  <li>Service</li>
+                  <li>Article</li>
+                  <li>WebPage</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G03 Entity Relationship <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">Company → Product → Article → Author처럼 엔티티 간 상하·연관 관계가 명확해야 AI가 정보의 맥락과 출처 관계를 정확히 파악할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Entity 간 상하/연관 관계가 명확하게 정의되어 있는가? (예: Company → Product → Article → Author)</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G04 Identity Consistency <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">회사명, 제품명, URL, sameAs 등 정체성 정보가 채널마다 일관되어야 AI가 동일한 엔티티로 정확히 매칭할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>회사명 일관성</li>
+                  <li>제품명 일관성</li>
+                  <li>URL 일관성</li>
+                  <li>sameAs</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 02 Evidence / Provenance ============ -->
+    <section class="section" id="s2" aria-labelledby="s2-title">
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title" id="s2-title">Evidence / Provenance</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">콘텐츠의 주장이 신뢰할 수 있는 출처와 근거로 뒷받침되는지를 평가합니다. Claim → Evidence → Source로 이어지는 구조와 출처의 품질이 AI가 이 콘텐츠를 안심하고 인용할 수 있는지를 결정합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G05 Claim Evidence <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">중요한 주장마다 근거와 출처로 이어지는 구조가 있어야 AI가 그 주장을 사실로 신뢰하고 인용할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>중요한 주장(Claim)마다 근거(Evidence)와 출처(Source)로 이어지는 구조가 있는가? (Claim → Evidence → Source)</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G06 Source Quality <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">공식 문서, 정부·공공기관, 학술 자료처럼 신뢰도가 높은 출처를 인용할수록 AI가 콘텐츠를 안전하게 인용할 근거로 삼습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>1순위: 공식 문서</li>
+                  <li>2순위: 정부 / 공공기관</li>
+                  <li>3순위: 학술 / 연구</li>
+                  <li>4순위: 전문기관</li>
+                  <li>5순위: 신뢰 가능한 미디어</li>
+                  <li>6순위: 일반 웹사이트</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G07 Attribution <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">출처 표시, 링크, 참고자료, 데이터 출처가 명시되어야 AI와 사용자 모두 주장의 근거를 추적할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>출처 표시</li>
+                  <li>링크</li>
+                  <li>참고자료</li>
+                  <li>데이터 출처</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G08 Claim / Source Relationship <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">주장과 출처가 1:1로 명확히 연결되어야 AI가 어떤 근거가 어떤 주장을 뒷받침하는지 정확히 파악할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>주장(Claim)과 출처(Source)가 실제로 1:1로 연결되는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 03 Citation Readiness ============ -->
+    <section class="section" id="s3" aria-labelledby="s3-title">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" id="s3-title">Citation Readiness</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">문장이나 문단이 맥락 없이 떼어내도 의미가 유지되고, AI가 그대로 가져가 쓰기 쉬운 형태로 구조화되어 있는지를 평가합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G09 Extractable Answer <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">AI가 한 문장이나 짧은 문단 단위로 그대로 가져가 쓸 수 있는 정보 블록이어야 인용 확률이 높아집니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>AI가 한 문장 또는 짧은 문단 단위로 그대로 가져가기 쉬운 정보 블록인가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G10 Clear Claims <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">모호한 주관적 표현 대신 단정적이고 구체적인 명제 문장이어야 AI가 사실 정보로 판단하고 인용하기 쉽습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>단정적이고 구체적인 명제 문장으로 구성되어 있는가? (모호한 주관적 표현이 아닌가?)</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G11 Context Completeness <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">문장만 따로 떼어 인용해도 의미가 유지되어야 AI가 문맥 손실 없이 해당 문장을 그대로 사용할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>문장만 따로 떼어 인용해도 의미가 유지되는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G12 Structured Information <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">리스트, 표, 정의, 단계, FAQ 같은 구조화된 형식은 AI가 정보를 파싱하고 추출하기 훨씬 쉽게 만듭니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>List</li>
+                  <li>Table</li>
+                  <li>Definition</li>
+                  <li>Steps</li>
+                  <li>FAQ</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G13 Attribution-ready Content <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">작성자, 출처, 날짜, 참고자료가 함께 제공되면 AI가 인용 시 출처를 명확히 밝힐 수 있는 완결된 정보가 됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>작성자</li>
+                  <li>출처</li>
+                  <li>날짜</li>
+                  <li>참고자료</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 04 Topical Coverage ============ -->
+    <section class="section" id="s4" aria-labelledby="s4-title">
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title" id="s4-title">Topical Coverage</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">핵심 주제를 얼마나 깊이 있게, 관련 개념까지 폭넓게 다루고 있는지를 평가합니다. 주제의 깊이와 관련 Entity 커버리지는 AI가 이 콘텐츠를 해당 주제의 권위 있는 자료로 인식하게 만듭니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G14 Topic Depth <span class="tag tag--weight">Weight 2</span></span>
+              <span class="check__desc">핵심 키워드를 중심으로 콘텐츠가 충분히 깊이 있게 다뤄져야 AI가 이 콘텐츠를 해당 주제의 신뢰할 만한 자료로 판단합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>핵심 keyword를 중심으로 콘텐츠가 충분히 깊이 있게 다뤄지는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G15 Related Entity Coverage <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">React의 Virtual DOM, JSX처럼 관련 엔티티까지 충분히 설명되어야 주제를 포괄적으로 다룬다는 신호가 됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>관련 Entity(예: React → Virtual DOM, JSX 등)가 충분히 설명되는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G16 Topic Relationship <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">관련 페이지가 내부 링크로 연결되어 있어야 AI가 주제 간 관계와 콘텐츠의 전체 구조를 파악할 수 있습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>관련 페이지가 내부 링크로 연결되어 있는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G17 Content Gap <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">경쟁 콘텐츠나 예상 질문 대비 빠진 핵심 하위 주제가 없어야 콘텐츠의 커버리지가 충분하다고 평가받습니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>경쟁 콘텐츠 또는 예상 질문 대비 부족한 핵심 하위 주제가 없는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 05 Freshness / Consistency ============ -->
+    <section class="section" id="s5" aria-labelledby="s5-title">
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title" id="s5-title">Freshness / Consistency</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">정보가 최신 상태로 유지되고, 여러 채널과 페이지에서 서로 모순되지 않는지를 평가합니다. 상충되는 정보는 AI가 어떤 것을 신뢰해야 할지 판단하기 어렵게 만듭니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G18 Freshness <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">최신 업데이트가 반영되고 outdated 정보가 없어야 AI가 안심하고 인용할 수 있는 신선한 정보로 판단합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>최신 업데이트가 반영되어 있는가?</li>
+                  <li>outdated information이 없는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G19 Cross-channel Consistency <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">웹사이트, Google, Bing, 소셜 등 여러 채널에서 핵심 엔티티 정보가 일치해야 AI가 신뢰할 수 있는 단일한 사실로 인식합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Website</li>
+                  <li>Google</li>
+                  <li>Bing</li>
+                  <li>Social</li>
+                  <li>Knowledge sources</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G20 Contradiction <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">서로 다른 페이지에서 상충되는 정보가 있으면 AI가 어떤 정보를 신뢰해야 할지 판단하기 어려워 인용을 꺼리게 됩니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>서로 다른 페이지에서 상충되는 정보가 없는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 06 AI Visibility ============ -->
+    <section class="section" id="s6" aria-labelledby="s6-title">
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title" id="s6-title">AI Visibility</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">실제 AI citation 및 grounding 데이터가 있다면 이를 반영해 평가합니다. 데이터가 없는 경우 0점이 아닌 N/A로 별도 표시해, 데이터 부재와 실제 낮은 품질을 구분합니다.</p>
+
+      <ul class="checks">
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G21 Citation Data <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">실제 Citation count, Cited pages, Citation trend 데이터가 있다면 이를 반영해 콘텐츠가 실제로 얼마나 인용되고 있는지 파악합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Citation count</li>
+                  <li>Cited pages</li>
+                  <li>Citation trend</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">G22 Grounding / Query Data <span class="tag tag--weight">Weight 1</span></span>
+              <span class="check__desc">Grounding query 데이터가 있다면 반영하고, 없다면 0점이 아닌 N/A로 표시해 데이터 부재와 낮은 품질을 구분합니다.</span>
+              <details><summary>체크 방법</summary>
+                <ul class="check__how">
+                  <li>Grounding query 데이터가 있다면 반영했는가?</li>
+                  <li>데이터가 없다면 0점이 아닌 N/A("AI Visibility Data Unavailable")로 표시했는가?</li>
+                </ul>
+              </details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="foot">
+      <dl>
+        <dt>버전</dt><dd>1.0</dd>
+        <dt>기준</dt><dd>GEO 체크리스트 (docs/GEO 체크리스트.md)</dd>
+        <dt>합계</dt><dd>30 / 30점 (Overall의 30%)</dd>
+        <dt>적용 범위</dt><dd>웹사이트 전체 페이지 공통</dd>
+      </dl>
+      <p style="margin-top:var(--space-4)">
+        체크 상태는 이 창에서만 유지됩니다. 새로고침하면 초기화되므로,
+        점검 결과를 남기려면 브라우저 인쇄 기능으로 PDF 저장하세요.
+      </p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check__box'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check'));
+  var fill = document.getElementById('progress-fill');
+  var count = document.getElementById('progress-count');
+  var currentFilter = 'all';
+
+  /* ---------- 진행률 ---------- */
+  function updateProgress() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var total = boxes.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+
+    fill.style.width = pct + '%';
+    count.innerHTML = '<b>' + done + '</b> / ' + total + ' 완료 · ' + pct + '%';
+
+    // 섹션별 진행률
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var slot = sec.querySelector('[data-section-progress]');
+      if (!slot) return;
+      var secBoxes = Array.prototype.slice.call(sec.querySelectorAll('.check__box'));
+      if (!secBoxes.length) return;
+      var secDone = secBoxes.filter(function (b) { return b.checked; }).length;
+      slot.textContent = secDone + ' / ' + secBoxes.length;
+      slot.style.color = (secDone === secBoxes.length)
+        ? 'var(--c-green)' : 'var(--color-text-mute)';
+    });
+  }
+
+  /* ---------- 필터 ---------- */
+  function applyFilter(mode) {
+    currentFilter = mode;
+    items.forEach(function (item) {
+      var box = item.querySelector('.check__box');
+      var show = true;
+
+      if (mode === 'todo') show = !box.checked;
+
+      item.classList.toggle('is-hidden', !show);
+    });
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      updateProgress();
+      if (currentFilter === 'todo') applyFilter('todo');
+    });
+  });
+
+  document.querySelectorAll('.filters__btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filters__btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  /* ---------- 초기화 ---------- */
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    updateProgress();
+    applyFilter(currentFilter);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>
