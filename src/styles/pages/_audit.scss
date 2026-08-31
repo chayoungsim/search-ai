@@ -1,0 +1,894 @@
+@use '@/styles/abstracts' as *;
+
+// ─────────────────────────────────────────────
+// /audit — URL 입력형 자동진단 도구
+// 3단계: 입력(AuditInput) → 분석 중(AuditProgress) → 결과(AuditReport)
+// 모든 클래스 .audit- 접두사. 공용 .section / .container / .cta-button + 디자인 토큰 재사용
+// ─────────────────────────────────────────────
+
+@keyframes audit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.audit-spin {
+  animation: audit-spin 0.9s linear infinite;
+}
+
+.audit-tool {
+  // 화면 전환 시 세로 점프 완화
+  min-height: 60vh;
+}
+
+// ── 1. 입력 화면 ──────────────────────────────
+.audit-input {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 4.8rem 4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+
+  .section-label {
+    display: block;
+  }
+}
+
+.audit-input-title {
+  margin: 1.2rem 0 0;
+  @include heading-fluid(2.8rem, 4rem);
+
+  letter-spacing: -0.05em;
+}
+
+.audit-input-lead {
+  max-width: 46rem;
+  margin: 1.6rem auto 0;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+
+.audit-input-form {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 3.2rem;
+}
+
+.audit-input-field {
+  flex: 1;
+  min-width: 0;
+  height: 5.6rem;
+  padding: 0 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  @include focus-ring;
+
+  &::placeholder {
+    color: var(--color-muted);
+  }
+}
+
+.audit-input-form .cta-button {
+  flex: none;
+  padding: 0 2.8rem;
+}
+
+.audit-input-error {
+  margin: 1.6rem 0 0;
+  color: var(--color-fail);
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-input-note {
+  margin: 2rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.25rem;
+}
+
+// ── 2. 분석 중 화면 ───────────────────────────
+.audit-progress {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 4.8rem 4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.audit-progress-spinner {
+  display: block;
+  width: 4.8rem;
+  height: 4.8rem;
+  margin: 0 auto 2.4rem;
+  border: 3px solid var(--color-primary-light);
+  border-top-color: var(--color-primary);
+  border-radius: var(--radius-circle);
+  animation: audit-spin 0.9s linear infinite;
+}
+
+.audit-progress-title {
+  margin: 0;
+  font-size: 2.4rem;
+  letter-spacing: -0.04em;
+}
+
+.audit-progress-host {
+  margin: 0.6rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.4rem;
+}
+
+.audit-progress-meter {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin: 3.2rem 0 0;
+}
+
+.audit-progress-bar {
+  flex: 1;
+  height: 0.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-line);
+  overflow: hidden;
+}
+
+.audit-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transition: width 0.25s ease;
+}
+
+.audit-progress-percent {
+  flex: none;
+  min-width: 4rem;
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-black);
+  text-align: right;
+}
+
+.audit-progress-steps {
+  margin: 3.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.audit-progress-step {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.4rem 1.6rem;
+  border-radius: var(--radius-md);
+  color: var(--color-muted);
+  font-size: 1.45rem;
+
+  & + & {
+    margin-top: 0.6rem;
+  }
+}
+
+.audit-progress-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-line);
+  border-radius: var(--radius-circle);
+  color: var(--color-white);
+}
+
+.audit-progress-step.is-done {
+  color: var(--color-text);
+
+  .audit-progress-step-icon {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+  }
+}
+
+.audit-progress-step.is-active {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-bold);
+
+  .audit-progress-step-icon {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}
+
+.audit-progress-hint {
+  margin: 2.4rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.25rem;
+}
+
+// ── 3. 결과 화면 ──────────────────────────────
+.audit-report {
+  max-width: 92rem;
+  margin: 0 auto;
+}
+
+// 3a. 종합 점수 요약
+.audit-summary {
+  padding: 4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.audit-summary-head {
+  @include flex-col(0.4rem);
+
+  align-items: center;
+}
+
+.audit-summary-host {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-summary-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0 0;
+}
+
+.audit-score {
+  color: var(--near-black);
+  font-size: 5.6rem;
+  font-weight: var(--font-weight-black);
+  line-height: 1;
+}
+
+.audit-score-unit {
+  margin-left: 0.6rem;
+  color: var(--color-muted);
+  font-size: 1.8rem;
+  font-weight: var(--font-weight-normal);
+}
+
+// 등급 배지 (요약 / 영역 카드 공용)
+.audit-grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 3.4rem;
+  height: 3.4rem;
+  padding: 0 1.4rem;
+  border-radius: var(--radius-pill);
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-black);
+  line-height: 1;
+}
+
+.audit-grade-label {
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-grade--a,
+.audit-grade--b {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.audit-grade--c,
+.audit-grade--d {
+  background: color-mix(in srgb, var(--color-warn) 16%, var(--color-white));
+  color: var(--color-warn);
+}
+
+.audit-grade--f {
+  background: color-mix(in srgb, var(--color-fail) 14%, var(--color-white));
+  color: var(--color-fail);
+}
+
+.audit-meter-bar {
+  height: 0.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-line);
+  overflow: hidden;
+}
+
+.audit-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.audit-summary-bar {
+  margin: 2.4rem 0 0;
+}
+
+.audit-summary-desc {
+  max-width: 52rem;
+  margin: 2rem auto 0;
+  color: var(--color-muted);
+  font-size: 1.45rem;
+  line-height: 1.8;
+}
+
+.audit-summary-counts {
+  margin: 1.6rem 0 0;
+  color: var(--color-text);
+  font-size: 1.35rem;
+
+  strong {
+    color: var(--color-fail);
+    font-weight: var(--font-weight-black);
+  }
+}
+
+.audit-summary-measured {
+  margin: 0.8rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+
+  strong {
+    color: var(--color-text);
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+.audit-summary-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 3.2rem 0 0;
+}
+
+// 3b. 영역 카드
+.audit-report-areas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.4rem;
+  margin: 2.4rem 0 0;
+}
+
+.audit-area-card {
+  padding: 2.8rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  @include lift;
+}
+
+.audit-area-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.audit-area-card-name {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+}
+
+.audit-area-card-fullname {
+  margin: 0.2rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.15rem;
+}
+
+.audit-area-card-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 1.6rem 0 0;
+}
+
+.audit-area-card-num {
+  color: var(--near-black);
+  font-size: 2.8rem;
+  font-weight: var(--font-weight-black);
+}
+
+.audit-area-card-num-unit {
+  color: var(--color-muted);
+  font-size: 1.3rem;
+}
+
+.audit-area-card-weight {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+}
+
+.audit-area-card-bar {
+  margin: 1.2rem 0 0;
+}
+
+.audit-area-card-cats {
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.25rem;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  li:first-child {
+    border-top: 0;
+  }
+}
+
+.audit-area-card-cat-label {
+  color: var(--color-text);
+}
+
+.audit-area-card-cat-count {
+  color: var(--color-muted);
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-area-card-grade-label {
+  margin: 1.6rem 0 0;
+  color: var(--color-primary-dark);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+}
+
+// 3c. 수정 필요 항목
+.audit-fix-list {
+  margin: 5.6rem 0 0;
+}
+
+.audit-fix-list-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font-size: 2.4rem;
+  letter-spacing: -0.04em;
+}
+
+.audit-fix-list-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  height: 3rem;
+  padding: 0 1rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-fail) 14%, var(--color-white));
+  color: var(--color-fail);
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-black);
+}
+
+.audit-fix-list-lead {
+  margin: 1.4rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+.audit-fix-empty {
+  margin: 1.6rem 0 0;
+  padding: 2.4rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 1.4rem;
+}
+
+.audit-fix-group {
+  margin: 3.6rem 0 0;
+}
+
+.audit-fix-group-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.6rem;
+  font-size: 1.7rem;
+}
+
+.audit-fix-group-count {
+  color: var(--color-muted);
+  font-size: 1.3rem;
+  font-weight: var(--font-weight-normal);
+}
+
+.audit-fix-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li + li {
+    margin-top: 1rem;
+  }
+}
+
+.audit-fix-item {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.audit-fix-item-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.8rem 2rem;
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--color-bg);
+  }
+}
+
+.audit-fix-item-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--near-black);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-fix-item-id {
+  margin-right: 0.6rem;
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-black);
+}
+
+// 상태 배지
+.audit-status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-black);
+}
+
+.audit-status--pass {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.audit-status--warning {
+  background: color-mix(in srgb, var(--color-warn) 18%, var(--color-white));
+  color: var(--color-warn);
+}
+
+.audit-status--fail {
+  background: color-mix(in srgb, var(--color-fail) 16%, var(--color-white));
+  color: var(--color-fail);
+}
+
+// 심각도 칩
+.audit-severity {
+  flex: none;
+  padding: 0.2rem 0.8rem;
+  border: 1px solid currentcolor;
+  border-radius: var(--radius-pill);
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-severity--critical {
+  color: var(--color-fail);
+}
+
+.audit-severity--high {
+  color: var(--color-warn);
+}
+
+.audit-severity--medium,
+.audit-severity--low {
+  color: var(--color-muted);
+}
+
+.audit-fix-item-body {
+  padding: 0 2rem 2.4rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.audit-fix-item-meta {
+  margin: 1.6rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.audit-fix-block {
+  margin: 2rem 0 0;
+
+  h4 {
+    margin: 0 0 0.8rem;
+    color: var(--color-primary-dark);
+    font-size: 1.35rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    line-height: 1.8;
+  }
+}
+
+.audit-fix-checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text);
+  font-size: 1.35rem;
+  line-height: 1.8;
+
+  li {
+    position: relative;
+    padding-left: 1.8rem;
+  }
+
+  li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--color-muted);
+  }
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+}
+
+// Before / After 예시
+.audit-example {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.6rem;
+  margin: 1rem 0 0;
+}
+
+.audit-example-label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.audit-example-col--bad .audit-example-label {
+  color: var(--color-fail);
+}
+
+.audit-example-col--good .audit-example-label {
+  color: var(--color-primary-dark);
+}
+
+.audit-example-code {
+  margin: 0;
+  padding: 1.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  font-family: ui-monospace, sfmono-regular, menlo, consolas, 'Liberation Mono', monospace;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.audit-example-col--bad .audit-example-code {
+  border-color: color-mix(in srgb, var(--color-fail) 40%, var(--color-line));
+}
+
+.audit-example-col--good .audit-example-code {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-line));
+}
+
+.audit-example-note {
+  margin: 1.2rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.25rem;
+  line-height: 1.7;
+}
+
+// 서버가 발견한 내용 블록 (수정 항목 아코디언 안)
+.audit-fix-evidence {
+  padding: 1.4rem 1.6rem;
+  border-left: 3px solid color-mix(in srgb, var(--color-warn) 55%, var(--color-line));
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: color-mix(in srgb, var(--color-warn) 8%, var(--color-white));
+
+  h4 {
+    color: var(--color-text);
+  }
+}
+
+// 자동 판정 예정(na) 항목 — 접힌 muted 섹션
+.audit-na-list {
+  margin: 3.2rem 0 0;
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.audit-na-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.6rem 2rem;
+  color: var(--color-muted);
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.audit-na-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  height: 2.6rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-line);
+  color: var(--color-text);
+  font-size: 1.2rem;
+}
+
+.audit-na-lead {
+  margin: 0 2rem;
+  padding-bottom: 1.2rem;
+  color: var(--color-muted);
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+
+.audit-na-group {
+  padding: 1.6rem 2rem;
+  border-top: 1px solid var(--color-line);
+
+  h4 {
+    margin: 0 0 1rem;
+    font-size: 1.4rem;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.8rem 0;
+    font-size: 1.3rem;
+
+    & + li {
+      border-top: 1px solid var(--color-line);
+    }
+  }
+}
+
+.audit-na-id {
+  margin-right: 0.6rem;
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-black);
+}
+
+.audit-na-rule-title {
+  font-weight: var(--font-weight-bold);
+}
+
+.audit-na-rule-summary {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--color-muted);
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+// ── 접근성 · 반응형 ───────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .audit-spin,
+  .audit-progress-spinner {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  .audit-meter-fill,
+  .audit-progress-fill {
+    transition: none;
+  }
+}
+
+@media (width <= 900px) {
+  .audit-report-areas {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 600px) {
+  .audit-input,
+  .audit-progress {
+    padding: 3.2rem 2rem;
+  }
+
+  .audit-summary {
+    padding: 2.8rem 2rem;
+  }
+
+  .audit-input-form {
+    flex-direction: column;
+  }
+
+  .audit-input-field {
+    border-radius: var(--radius-md);
+  }
+
+  .audit-input-form .cta-button {
+    width: 100%;
+  }
+
+  .audit-score {
+    font-size: 4.4rem;
+  }
+
+  .audit-example {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-fix-item-summary {
+    flex-wrap: wrap;
+    padding: 1.4rem;
+  }
+
+  .audit-fix-item-title {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .audit-fix-item-body {
+    padding: 0 1.4rem 2rem;
+  }
+}

@@ -1,9 +1,7 @@
-import React from 'react'
+import AuditTool from "@/components/audit/AuditTool"
 
 const Audit = () => {
-  return (
-    <div>Audit</div>
-  )
+  return <AuditTool />
 }
 
 export default Audit
