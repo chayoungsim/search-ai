@@ -1,12 +1,23 @@
-// Vercel Serverless Function 진입점.
-// 로컬 개발/독립 실행용 Hono 앱(server/index.ts)을 그대로 재사용해
-// 배포 환경에서 GET /api/audit 요청을 처리한다.
-import { handle } from "hono/vercel"
-import app from "../server/index"
+// [임시 진단본] Vercel 함수 크래시 원인 파악용.
+// server/index.ts 로드 또는 hono/vercel 로드 단계에서 나는 에러를 응답으로 반환한다.
+// 원인 확인 후 정상본으로 되돌린다.
 
-// node:crypto 등 Node API를 쓰므로 Node.js 런타임 고정
 export const config = {
     runtime: "nodejs",
 }
 
-export default handle(app)
+export default async function handler(req: Request): Promise<Response> {
+    try {
+        const [{ default: app }, { handle }] = await Promise.all([
+            import("../server/index"),
+            import("hono/vercel"),
+        ])
+        return handle(app)(req)
+    } catch (e) {
+        const err = e as Error
+        return new Response(
+            JSON.stringify({ diag: true, message: String(err?.message ?? e), stack: err?.stack ?? null }, null, 2),
+            { status: 500, headers: { "content-type": "application/json" } },
+        )
+    }
+}
