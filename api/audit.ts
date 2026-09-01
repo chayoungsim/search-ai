@@ -1,22 +1,17 @@
-// [임시 진단본 3] Vercel이 이 함수를 Web(Request) 시그니처로 부르는지,
-// 클래식 Node (req,res) 시그니처로 부르는지 확정한다.
+// Vercel Serverless Function 진입점.
+// 로컬 개발/독립 실행용 Hono 앱(server/index.ts)을 그대로 재사용해
+// 배포 환경에서 GET /api/audit 요청을 처리한다.
+//
+// 주의: Vercel(@vercel/node)은 이 default export 를 클래식 Node (req, res)
+// 시그니처로 호출한다. 따라서 Web 표준 Request 를 기대하는 hono/vercel 의
+// handle() 이 아니라, (req,res) → Web Request 변환을 해 주는
+// @hono/node-server 의 getRequestListener 를 써야 한다.
+import { getRequestListener } from "@hono/node-server"
+import app from "../server/index"
 
+// node:crypto 등 Node API를 쓰므로 Node.js 런타임 고정
 export const config = {
     runtime: "nodejs",
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function handler(a: any, b: any): any {
-    // Web 표준 시그니처: a = Request, b = undefined
-    if (b === undefined) {
-        const u = typeof a?.url === "string" ? a.url : String(a?.url)
-        return new Response(
-            JSON.stringify({ diag: 3, mode: "web", url: u }, null, 2),
-            { status: 200, headers: { "content-type": "application/json" } },
-        )
-    }
-    // 클래식 Node 시그니처: a = IncomingMessage, b = ServerResponse
-    b.statusCode = 200
-    b.setHeader("content-type", "application/json")
-    b.end(JSON.stringify({ diag: 3, mode: "classic", url: a?.url ?? null }))
-}
+export default getRequestListener(app.fetch)
