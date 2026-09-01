@@ -1,5 +1,5 @@
-import { buildAuditResult, normalizeUrl } from "@/data/audit"
-import type { AuditResult } from "@/data/audit"
+import { buildAuditResult, normalizeUrl } from "../src/data/audit"
+import type { AuditResult } from "../src/data/audit"
 import { crawlPage, fetchText } from "./crawl"
 import { parseHtml } from "./parse"
 import { runChecks } from "./checks"

@@ -1,5 +1,5 @@
 import type { HTMLElement } from "node-html-parser"
-import type { RuleStatus } from "@/data/audit"
+import type { RuleStatus } from "../src/data/audit"
 
 export interface JsonLdBlock {
   raw: string

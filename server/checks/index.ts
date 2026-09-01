@@ -1,5 +1,5 @@
-import { allRuleIds } from "@/data/audit"
-import type { RuleOutcome } from "@/data/audit"
+import { allRuleIds } from "../../src/data/audit"
+import type { RuleOutcome } from "../../src/data/audit"
 import type { CheckContext, CheckFn } from "../types"
 import seoChecks from "./seo"
 import aeoChecks from "./aeo"

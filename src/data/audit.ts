@@ -6,9 +6,9 @@
 //
 // src/data/{seo,aeo,geo}.ts 의 체크리스트(rule: id/title/weight/summary/checks[])를 그대로 소비한다.
 
-import { seoChecklist } from "@/data/seo";
-import { aeoChecklist } from "@/data/aeo";
-import { geoChecklist } from "@/data/geo";
+import { seoChecklist } from "./seo";
+import { aeoChecklist } from "./aeo";
+import { geoChecklist } from "./geo";
 
 export interface AuditRule {
   id: string;

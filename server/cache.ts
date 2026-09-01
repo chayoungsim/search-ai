@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import type { AuditResult } from "@/data/audit"
+import type { AuditResult } from "../src/data/audit"
 
 // 동일 URL 진단 결과를 24시간 캐시한다. 인메모리 → 서버 인스턴스별로 독립.
 const TTL_MS = 24 * 60 * 60 * 1000
