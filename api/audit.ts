@@ -1,17 +1,31 @@
-// Vercel Serverless Function 진입점.
-// 로컬 개발/독립 실행용 Hono 앱(server/index.ts)을 그대로 재사용해
-// 배포 환경에서 GET /api/audit 요청을 처리한다.
-//
-// 주의: Vercel(@vercel/node)은 이 default export 를 클래식 Node (req, res)
-// 시그니처로 호출한다. 따라서 Web 표준 Request 를 기대하는 hono/vercel 의
-// handle() 이 아니라, (req,res) → Web Request 변환을 해 주는
-// @hono/node-server 의 getRequestListener 를 써야 한다.
-import { getRequestListener } from "@hono/node-server"
-import app from "../server/index"
+// [임시 진단본 4] 클래식 (req,res) 위에서 모듈 로드/실행 에러를 res 로 반환한다.
 
-// node:crypto 등 Node API를 쓰므로 Node.js 런타임 고정
 export const config = {
     runtime: "nodejs",
 }
 
-export default getRequestListener(app.fetch)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function handler(req: any, res: any): Promise<void> {
+    try {
+        const [nodeServer, serverMod] = await Promise.all([
+            import("@hono/node-server"),
+            import("../server/index"),
+        ])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const app = (serverMod as any).default
+        const listener = nodeServer.getRequestListener(app.fetch)
+        await listener(req, res)
+    } catch (e) {
+        const err = e as Error
+        res.statusCode = 500
+        res.setHeader("content-type", "application/json")
+        res.end(
+            JSON.stringify({
+                diag: 4,
+                name: err?.name ?? null,
+                message: String(err?.message ?? e),
+                stack: err?.stack ?? null,
+            }, null, 2),
+        )
+    }
+}
