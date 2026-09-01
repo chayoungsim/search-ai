@@ -1,14 +1,22 @@
-// [임시 진단본 2] server/ 코드를 전혀 import 하지 않는 최소 함수.
-// 이 응답이 정상이면 문제는 ../server/index 모듈 그래프 로드에 있다.
+// [임시 진단본 3] Vercel이 이 함수를 Web(Request) 시그니처로 부르는지,
+// 클래식 Node (req,res) 시그니처로 부르는지 확정한다.
 
 export const config = {
     runtime: "nodejs",
 }
 
-export default function handler(req: Request): Response {
-    const url = new URL(req.url).searchParams.get("url")
-    return new Response(
-        JSON.stringify({ diag: 2, ok: true, ts: Date.now(), receivedUrl: url }, null, 2),
-        { status: 200, headers: { "content-type": "application/json" } },
-    )
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function handler(a: any, b: any): any {
+    // Web 표준 시그니처: a = Request, b = undefined
+    if (b === undefined) {
+        const u = typeof a?.url === "string" ? a.url : String(a?.url)
+        return new Response(
+            JSON.stringify({ diag: 3, mode: "web", url: u }, null, 2),
+            { status: 200, headers: { "content-type": "application/json" } },
+        )
+    }
+    // 클래식 Node 시그니처: a = IncomingMessage, b = ServerResponse
+    b.statusCode = 200
+    b.setHeader("content-type", "application/json")
+    b.end(JSON.stringify({ diag: 3, mode: "classic", url: a?.url ?? null }))
 }
