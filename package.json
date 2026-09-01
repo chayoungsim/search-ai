@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && tsc -p tsconfig.server.json && vite build",
+    "build": "tsc -b && tsc -p tsconfig.server.json && vite build && vite build --ssr server/index.ts --outDir dist-server",
     "build:server": "vite build --ssr server/node.ts --outDir dist-server",
     "start": "node dist-server/node.js",
     "lint": "eslint .",
