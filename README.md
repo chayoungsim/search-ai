@@ -8,6 +8,8 @@
 - **AEO** (Answer Engine Optimization) — 질문에 대한 답변이 되는 콘텐츠
 - **GEO** (Generative Engine Optimization) — AI가 이해하고 인용하는 콘텐츠
 
+- [배포 : https://search-ai-beige.vercel.app/](https://search-ai-beige.vercel.app/)
+
 ## 기술 스택
 
 | 구분 | 사용 기술 |
